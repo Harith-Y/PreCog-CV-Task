@@ -1,7 +1,9 @@
 .ipynb_checkpoints/
 .virtual_documents
 .vscode/
+.idea/
 
 Data/
 models/
 /Report/*
+!/Report/Report.pdf
