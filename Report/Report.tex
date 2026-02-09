@@ -1,0 +1,2217 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --------------------------------------------------------
+%  _____           
+% |_   _|_ _ _   _ 
+%   | |/ _` | | | |
+%   | | (_| | |_| |
+%   |_|\__,_|\__,_|
+%
+% LaTeX2e Template
+% Version 2.5.0 (01/01/2026)
+%
+% Author: 
+% Guillermo Jimenez (memo.notess1@gmail.com)
+% 
+% License:
+% Creative Commons CC BY 4.0
+% --------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% --------------------------------------------------------
+% Github Repository:
+% https://github.com/MemoJimenez/Tau-class
+% --------------------------------------------------------
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[9pt,a4paper,twocolumn,twoside]{tau-class/tau}
+\usepackage[english]{babel}
+
+% Spanish babel recomendation
+% \usepackage[spanish,es-nodecimaldot,es-noindentfirst]{babel} 
+
+%----------------------------------------------------------
+% Title & Authors/Affiliations
+%----------------------------------------------------------
+
+\doctype{Research Progress Report}
+\title{Computer Vision Task: Daily Progress \& Experimentation Log}
+
+%----------------------------------------------------------
+
+\author[1]{Harith Yerragolam\thanks{\href{mailto:harith.yerragolam@research.iiit.ac.in}{harith.yerragolam@research.iiit.ac.in} (Harith Yerragolam)}}
+
+%----------------------------------------------------------
+
+\affil[a]{IIIT Hyderabad}
+
+%----------------------------------------------------------
+% Document-, Footer- information
+%----------------------------------------------------------
+
+\dates{Project Period: January 21, 2026 -- \today}
+
+\docinfo{This document chronicles the daily progress, experimental decisions, and iterative improvements made during the Computer Vision task. It serves as a comprehensive record of the development process, including challenges faced and solutions implemented.} 
+
+%----------------------------------------------------------
+
+% \footinfo{CV Task Report}
+% \theday{\today}
+% \organization{PreCog, IIIT Hyderabad}
+% \leadauthor{Harith Yerragolam}
+
+%----------------------------------------------------------
+% ABSTRACT AND KEYWORDS
+%----------------------------------------------------------
+
+\begin{abstract}    
+    This report documents the complete journey of completing the Computer Vision Task. It provides a chronological account of daily progress, key decisions, experimental iterations, and the reasoning behind each choice. The document includes detailed comparisons of different approaches, performance metrics before and after modifications, and reflections on what worked and what didn't. This serves both as a record of the development process and a reference for future similar projects.
+\end{abstract}
+
+%----------------------------------------------------------
+
+\keywords{computer vision, deep learning, model development, experimental log, progress report}
+
+%----------------------------------------------------------
+
+\begin{document}
+		
+    \maketitle 
+    \thispagestyle{firststyle}
+    
+%----------------------------------------------------------
+
+\section{Overview}
+
+    \taustart{T}his document chronicles the development process of CV Task. The goal was to trick the CNN Model Architecture. This report captures not just the final results, but the entire journey - including dead ends, pivots, and the reasoning behind every decision made along the way.
+
+    \subsection{Initial Setup \& Goals}
+    
+        \textbf{Date:} January 21, 2026
+        
+        \textbf{Objective:} Setup Codebase and Refresh upon CNN Architecture.
+        
+        \begin{itemize}
+            \item Initial dataset: MNIST
+            \item Target metrics: Accuracy
+            \item Key constraints: Time
+            \item Baseline approach: Simple CNN with 2 convolutional layers
+        \end{itemize}
+        
+%----------------------------------------------------------
+% DAILY PROGRESS ENTRIES
+% Use this section to document day-by-day progress
+%----------------------------------------------------------
+
+\section{Day 1: 21 January, 2026 - Setting Up \& Understanding the Challenge}
+
+    \subsection{What I Did Today}
+    
+        \taustart{T}oday was all about getting started. I read through the task description - "The Lazy Artist" - and honestly, it's fascinating! The idea that a CNN could just learn to detect color quickly instead of actual digit shapes is both amusing and terrifying.
+        
+        Here's what I actually got done:
+        
+        \begin{itemize}
+            \item \textbf{Environment Setup:} Created a fresh Anaconda environment called \inlinecode{precog} (obviously). Installed PyTorch, torchvision, NumPy, Matplotlib, OpenCV, scikit-learn, and other essentials. The full setup is documented in \inlinecode{environment.yml} and \inlinecode{requirements.txt}.
+            
+            \item \textbf{Git Repository:} Initialized version control. Commit messages will be my sanity later.
+            
+            \item \textbf{Baseline Model:} My hands were rusty with PyTorch, so I started simple. Implemented a basic fully-connected network (\inlinecode{MNISTModel}) - not even a proper CNN yet, just Linear layers with ReLU activations. Trained it on standard MNIST for 5 epochs to make sure everything works.
+            
+            \item \textbf{Results Check:} The baseline model hit about 97.58\% accuracy on standard MNIST test set. Good enough to confirm my setup works. Also visualized some misclassifications - mostly 4s and 9s getting confused, which is expected.
+        \end{itemize}
+        
+        \begin{note}
+            \textbf{Reality Check:} I haven't actually implemented the biased color dataset yet. Today was purely infrastructure. Upcoming goal: Create the "lying" dataset where colors create spurious correlations, i.e. Task 0.
+        \end{note}
+        
+    \subsection{Key Decisions \& Reasoning}
+    
+        \begin{tauenv}[frametitle=Decision: Start with Vanilla MNIST First]
+            \textbf{What I chose:} Train a simple baseline model on unmodified MNIST before touching the color-bias task.
+            
+            \textbf{Why:} I need to know what "normal" looks like. If my biased model performs terribly, I want to be sure it's because of the bias, not because I messed up my training loop or architecture. Plus, I hadn't touched PyTorch in a while, hence a warm-up was needed.
+            
+            \textbf{Alternatives considered:} Diving straight into the biased dataset creation. But that felt premature. Better to validate the environment first.
+        \end{tauenv}
+        
+        \begin{tauenv}[frametitle=Decision: Use Simple Fully-Connected Network]
+            \textbf{What I chose:} A basic 3-layer fully-connected network (784 $\rightarrow$ 128 $\rightarrow$ 64 $\rightarrow$ 10).
+            
+            \textbf{Why:} For the baseline, I wanted something stupid simple. CNNs are great, but they add complexity. If a fully-connected net can get 97\% accuracy on MNIST, that's enough to confirm my setup is correct. Next, I'll implement an actual CNN (probably a simple 2-3 layer ConvNet or ResNet-18 variant).
+            
+            \textbf{Alternatives considered:} Could've used ResNet-18 from the start, but honestly, it's an overkill for MNIST. Plus I want to see the dramatic performance difference when I introduce the color bias.
+        \end{tauenv}
+        
+    \subsection{Experiments \& Results}
+    
+        \subsubsection{Baseline Training on Standard MNIST}
+        
+        \textbf{Setup:}
+        \begin{itemize}
+            \item Model: 3-layer fully-connected network (0.11 Million parameters)
+            \item Optimizer: Adam (lr=0.001)
+            \item Loss: CrossEntropyLoss
+            \item Batch Size: 64
+            \item Epochs: 5
+        \end{itemize}
+        
+        \textbf{Hypothesis:} Even a simple fully-connected network should achieve $>$95\% accuracy on MNIST. It's a solved problem at this point.
+        
+        \textbf{Results:}
+        \begin{itemize}
+            \item Final Training Accuracy: $\sim$98.27\%
+            \item Final Test Accuracy: 97.58\%
+            \item Training Time: $\sim$60 seconds (5 epochs on NVIDIA GPU)
+        \end{itemize}
+        
+        \begin{note}
+            \textbf{Observation:} The model converged quickly. By epoch 2, test accuracy was already above 96\%. The confusion matrix showed most errors were visually similar digits (4/9, 3/5, 7/2). This is expected behavior.
+            
+            \textbf{What surprised me:} I forgot how fast MNIST trains. Even without fancy architectures or tricks, you get decent performance. This makes me wonder that when I introduce color bias tomorrow, will the model \textit{prefer} the easy color signal over actually learning shapes? I'm thinking yes.
+        \end{note}
+
+    \subsection{Major Milestones \& Breakthroughs}
+    
+        \textit{Nothing groundbreaking today, this was pure setup. But getting 97.58\% accuracy on a simple baseline proved the environment is solid. Tomorrow's the real test when I introduce the color bias.}
+
+    \subsection{Challenges \& Blockers}
+    
+        \begin{tauenv}[frametitle=Minor Issue: CUDA Setup]
+            \textbf{Problem:} Initially, got a warning about OpenMP library initialization. The error message was cryptic: \textit{"OMP: Error \#15: Initializing libiomp5md.dll, but found libiomp5md.dll already initialized."}. This caused the Jupyter kernel to crash on every model run.
+            
+            \textbf{Fix:} Set environment variable \inlinecode{KMP\_DUPLICATE\_LIB\_OK} to \inlinecode{TRUE} at the top of the notebook. Not the cleanest solution (a solution for conflicting Intel MKL installations), but it works. I'm glad \href{https://stackoverflow.com/questions/20554074/sklearn-omp-error-15-initializing-libiomp5md-dll-but-found-mk2iomp5md-dll-a}{StackOverflow} had this covered!
+            
+            \textbf{Why it happened:} Anaconda's NumPy and PyTorch both ship with Intel MKL libraries, and sometimes they conflict. This is a known issue on Windows.
+        \end{tauenv}
+        
+    \subsection{What I plan to do next}
+    
+        \begin{enumerate}
+            \item \textbf{Create the Biased Dataset:} Implement the color transformation. Red 0s, Green 1s, etc. Make the "Easy" set with 95\% correlation and "Hard" set with inverted/random colors.
+            
+            \item \textbf{Train the Cheater Model:} Build a proper CNN (maybe 2-3 conv layers or ResNet-18 variant) and train it on the Easy set. I'm expecting it to hit $>$95\% accuracy by just learning colors.
+            
+            \item \textbf{Expose the Cheat:} Evaluate on Hard set. Accuracy should plummet. Then analyze what the model actually learned using confusion matrices and some manual tests (e.g., feed it a Red 1, does it predict 0?).
+        \end{enumerate}
+        
+    \subsection{Experiments \& Results}
+    
+        \begin{table}[H]
+            \caption{Before and After Implementing Data Augmentation}
+            \label{tab:data_augmentation}
+            \begin{tabular}{lcc}
+            \toprule
+            \textbf{Metric} & \textbf{Before} & \textbf{After} \\
+            \midrule
+            Training Accuracy & 75\% & 82\% \\
+            Validation Accuracy & 68\% & 79\% \\
+            Training Time (epoch) & 45s & 38s \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{Results after implementing data augmentation.}
+        \end{table}
+        
+        \begin{note}
+            \textbf{Why it worked:} [Explain why you think this change improved things. Connect it to theory or intuition.]
+        \end{note}
+
+%----------------------------------------------------------
+% ADD MORE DAYS AS NEEDED - COPY THE STRUCTURE ABOVE
+%----------------------------------------------------------
+
+\section{Day 2: 23 January, 2026 - Building the Lie \& Training the Cheater}
+
+    \subsection{What I Did Today}
+    
+        \taustart{T}oday was intense. I dove into Task 0 (creating the biased dataset) and started Task 1 (training a model to expose the cheat). Got a lot done, but didn't quite nail the desired performance gap yet.
+        
+        Here's the breakdown:
+        
+        \begin{itemize}
+            \item \textbf{Task 0 - Created the Biased Color-MNIST Dataset:}
+            \begin{itemize}
+                \item Implemented a color-digit mapping: 
+                \begin{code}
+                    \lstinputlisting[language=python]{mapping.py}
+                    \caption{Color Mapping}
+                    \label{lst:mapping}
+                \end{code}
+                \item Built a stroke-based coloring function that applies color only to the digit foreground (where pixel intensity $>$ threshold), keeping the background neutral.
+                \item Generated "Easy" training set with 95\% bias: 95\% of digit 0s are Red, 5\% random colors.
+                \item Generated "Hard" test set with inverted correlation: 0s are \textit{never} Red.
+                \item Visualized 20 samples from each set - the bias is visually obvious in the training data.
+            \end{itemize}
+            
+            \item \textbf{Task 1 - Trained the "Cheater" CNN:}
+            \begin{itemize}
+                \item Implemented \inlinecode{SimpleCNN}: 2 conv layers (3→32→64 channels), max pooling, fully connected head (128 hidden units).
+                \item Also created \inlinecode{LazyCNN}: deliberately shallow (single conv layer) to encourage color shortcuts.
+                \item Trained \inlinecode{SimpleCNN} for just 1 epoch with Adam optimizer (lr=0.001).
+                \item Evaluated on both Easy train set and Hard test set.
+            \end{itemize}
+            
+            \item \textbf{Custom DataLoader:} Had to write a custom \inlinecode{collate\_fn} because PIL Images don't convert to tensors automatically in DataLoader. Classic PyTorch quirk Haha!
+        \end{itemize}
+        
+        \begin{note}
+            \textbf{Current Status:} I've successfully created the biased dataset and trained a baseline model, but the performance gap isn't good enough yet. Task 1 expects $>$95\% on Easy set and $<$20\% on Hard set to \textit{prove} the model learned color, not shape. I'm not there yet. Need to tweak training or architecture.
+        \end{note}
+        
+    \subsection{Key Decisions \& Reasoning}
+    
+        \begin{tauenv}[frametitle=Decision: Stroke-Based Coloring (Not Background)]
+            \textbf{What I chose:} Apply color to the digit strokes (foreground pixels above intensity threshold), not the background.
+            
+            \textbf{Why:} The task explicitly said "the color should be applied to the foreground stroke or a background texture" - \textit{not} just a solid background. If I colored the entire background, it'd be too easy to detect. By coloring the stroke itself, the spurious correlation is tightly coupled with the digit. The model \textit{has to} look at the digit area to see the color, making the shortcut more insidious.
+            
+            \textbf{Implementation Detail:} I used a pixel intensity threshold (50/255). Any pixel above this gets the color. Below stays grayscale background. This mimics "colored chalk on blackboard" rather than "digit cutout on colored paper."
+        \end{tauenv}
+        
+        \begin{tauenv}[frametitle={Decision: 95\% Bias in Training, 0\% in Testing}]
+            \textbf{What I chose:} 
+            \begin{itemize}
+                \item Easy Train Set: 95\% of digit $d$ gets color $c_d$, 5\% random.
+                \item Hard Test Set: Digit $d$ \textit{never} gets color $c_d$ (inverted correlation).
+            \end{itemize}
+            
+            \textbf{Why:} This creates maximum distribution shift. The model can cheat during training (color is highly predictive), but the cheat completely fails at test time. The 5\% counter-examples in training aren't enough to prevent overfitting to color - the model will still learn the shortcut because it's correct 95\% of the time.
+            
+            \textbf{Alternatives considered:} 
+            \begin{itemize}
+                \item 100\% bias in training: Too extreme, unrealistic.
+                \item Random colors in test: Not harsh enough, wanted a strict inversion to expose the cheat.
+            \end{itemize}
+        \end{tauenv}
+        
+        \begin{tauenv}[frametitle=Decision: SimpleCNN Architecture]
+            \textbf{What I chose:} Standard 2-layer CNN with moderate capacity (32→64 filters).
+            
+            \textbf{Why:} I wanted something powerful enough to learn MNIST easily, but not so deep that it'd be forced to learn robust features. Task description suggested "ResNet-18 or simple 3-layer CNN", I went with the simpler option first. If the model is too simple, it might fail even on the easy set. If it's too complex, it might accidentally learn shape despite the color shortcut.
+            
+            \textbf{Also created LazyCNN:} A deliberately weak architecture (single conv layer, 16 filters) to \textit{force} color-based cheating. Tested it but it's still not cheating hard enough. I need to tweak training more.
+        \end{tauenv}
+        
+    \subsection{Experiments \& Results}
+    
+        \subsubsection{Experiment 1: Initial Training on Biased Dataset}
+        
+        \textbf{Setup:}
+        \begin{itemize}
+            \item Model: \inlinecode{SimpleCNN} (2 conv layers, 128 hidden units)
+            \item Optimizer: Adam (lr=0.001)
+            \item Loss: CrossEntropyLoss
+            \item Training: 1 epoch on Easy biased training set
+            \item Batch Size: 64
+        \end{itemize}
+        
+        \textbf{Hypothesis:} The model should achieve very high accuracy ($>$95\%) on the Easy train set by learning to map colors to digits. When evaluated on the Hard test set (where color-digit correlations are inverted), accuracy should plummet to near-random ($<$20\%).
+        
+        \textbf{Results:} [After 1 epoch of training]
+        \begin{itemize}
+            \item Training Loss: 0.1930
+            \item Easy Train Set Accuracy: 98.30\%
+            \item Hard Test Set Accuracy: 67.84\%
+        \end{itemize}
+        
+        \begin{note}
+            \textbf{Problem:} The performance gap isn't dramatic enough. While the train accuracy is excellent (98.30\%, exceeding the 95\% target), the hard test set accuracy is 67.84\%; way too high! I was expecting $<$20\% (near-random guessing).
+            
+            \textbf{What this means:} The model is learning \textit{both} color and shape features. It's not purely cheating via color shortcuts. The 67.84\% test accuracy suggests that even when colors are misleading, the model can fall back on shape recognition to get the digit correct most of the time.
+            
+            \textbf{Why this happened:}
+            \begin{itemize}
+                \item \textbf{Architecture too capable:} SimpleCNN with 2 conv layers + dropout is robust enough to learn shape features despite color being available as a shortcut.
+                \item \textbf{Color signal too weak:} My stroke-based coloring might not be "loud" enough compared to the shape signal. The model sees color, but shape is still the dominant feature.
+                \item \textbf{Training too short:} Only 1 epoch might not give the model enough time to fully exploit the color shortcut. If I train longer, it might converge to the easier (color-based) solution.
+            \end{itemize}
+            
+            \textbf{What I'll try next:} 
+            \begin{itemize}
+                \item Switch to \inlinecode{LazyCNN} (single conv layer) - force the model to cheat by reducing capacity.
+                \item Train for more epochs (3-5) to see if color dominance increases with convergence.
+                \item Make colors more saturated/bold in the dataset to increase signal strength.
+                \item Check if adding more aggressive dropout or reducing model capacity helps.
+            \end{itemize}
+        \end{note}
+        
+    \subsection{Challenges \& Blockers}
+    
+        \begin{tauenv}[frametitle=Issue: PIL Image to Tensor Conversion in DataLoader]
+            \textbf{Problem:} After creating colored images as PIL Image objects, PyTorch's DataLoader threw a \inlinecode{TypeError} when trying to batch them. Error: \textit{"default\_collate: batch must contain tensors, numpy arrays, numbers, dicts or lists."} PIL Images aren't automatically converted.
+            
+            \textbf{Fix:} Wrote a custom \inlinecode{collate\_fn} that manually converts each PIL Image to a tensor using \inlinecode{transforms.ToTensor()}. Applied it to both \inlinecode{train\_loader} and \inlinecode{test\_loader}.
+            
+            \textbf{Code snippet:}
+            \begin{verbatim}
+def collate_fn(batch):
+    images, labels = [], []
+    to_tensor = T.ToTensor()
+    for img, label in batch:
+        images.append(to_tensor(img))
+        labels.append(label)
+    return torch.stack(images), torch.tensor(labels)
+            \end{verbatim}
+            
+            \textbf{Why it happened:} When I transformed MNIST to colored images, I returned PIL Image objects (because that's what OpenCV/Matplotlib work with easily). But DataLoader expects tensors by default. This is a common gotcha when doing custom dataset transformations.
+        \end{tauenv}
+        
+    \subsection{What Worked \& What Didn't}
+    
+        \textbf{What Worked:}
+        \begin{itemize}
+            \item Stroke-based coloring looks great visually - the bias is obvious when you plot samples.
+            \item DataLoader pipeline is functional after the custom collate fix.
+            \item Model trains without errors, converges quickly on the Easy set.
+            \item \textbf{Achieved 98.30\% accuracy on Easy train set} - exceeds the 95\% target, proving the model learned the biased dataset well.
+        \end{itemize}
+        
+        \textbf{What Didn't Work:}
+        \begin{itemize}
+            \item \textbf{Performance gap insufficient:} Hard test accuracy is 67.84\% - way above the target of $<$20\%. The model isn't purely cheating via color. It learned both color and shape, so it can still generalize reasonably well when colors are misleading.
+            
+            \item \textbf{Model too robust:} SimpleCNN's architecture (2 conv layers, dropout, 128 hidden units) is capable enough to learn shape features alongside color shortcuts. This defeats the purpose - I \textit{want} a lazy model that only learns color.
+            
+            \item \textbf{Need stronger bias:} Either the color signal needs to be more dominant, or the model capacity needs to be reduced to force reliance on the shortcut.
+        \end{itemize}
+        
+        \begin{table}[H]
+            \caption{SimpleCNN Performance: Easy vs Hard Sets}
+            \label{tab:day2_results}
+            \begin{tabular}{lcc}
+            \toprule
+            \textbf{Metric} & \textbf{Easy Train Set} & \textbf{Hard Test Set} \\
+            \midrule
+            Accuracy & 98.30\% & 67.84\% \\
+            Training Loss & 0.1930 & --- \\
+            Target Accuracy & $>$95\% & $<$20\% \\
+            \midrule
+            \textbf{Result} & \textcolor{green!60!black}{$\checkmark$ Passed} & \textcolor{red!60!black}{$\times$ Failed} \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{Model performance after 1 epoch. Train accuracy exceeds target, but test accuracy is far too high - model learned shape features instead of purely cheating via color.}
+        \end{table}
+        
+    \subsection{Tomorrow's Plan}
+    
+        \begin{enumerate}
+            \item \textbf{Train for More Epochs:} Run SimpleCNN for 3-5 epochs, monitor if Easy set accuracy reaches $>$95\%.
+            
+            \item \textbf{Test LazyCNN:} If SimpleCNN still learns shape, switch to the deliberately shallow \inlinecode{LazyCNN} (single conv layer) to force color reliance.
+            
+            \item \textbf{Generate Confusion Matrix:} Once I have a proper "cheater" model, analyze the confusion matrix on the Hard test set. It should show that the model predicts based on \textit{color}, not digit (e.g., all Red digits predicted as 0, regardless of actual shape).
+            
+            \item \textbf{Manual Test Cases:} Create synthetic test images: a Red 1, a Green 0, etc. Feed them to the model and confirm it predicts based on color.
+            
+            \item \textbf{Document Breakthrough:} Once I achieve the $>$95\% Easy / $<$20\% Hard split, that's the "proof of cheat." That'll be the major milestone for Day 3.
+        \end{enumerate}
+
+%----------------------------------------------------------
+
+\section{Day 3: 24 January, 2026 - Fixing the Dataset, Architecture \& Proving the Cheat}
+
+    \subsection{What I Did Today}
+
+        \taustart{T}oday was a rollercoaster. I came in with a model that \textit{sort of} cheated - 67\% hard test accuracy meant it was learning shapes alongside color, which completely defeats the point. The whole day was about systematically eliminating every avenue for the CNN to learn shapes, and honestly, it took way more iterations than I expected.
+
+        Here's what I actually got done:
+
+        \begin{itemize}
+            \item \textbf{Color Palette Overhaul:} I initially used solid colors but just to explore, tried out the \href{https://loading.io/color/feature/Spectral-10/}{loading.io Spectral-10 palette}, which looked pretty in theory. But in practice, digits 0 and 1 were both pinkish-red, digits 3 and 4 both yellowish, and 6 and 7 both greenish. No wonder the model wasn't cheating, it couldn't even tell the colors apart! Scrapped that and switched back to hand-picked maximally distinct colors (Red, Green, Blue, Yellow, Cyan, Magenta, Orange, White, Purple, Lime).
+
+            \item \textbf{Switched to Background Coloring:} My Day 2 approach was coloring the digit stroke itself. But think about it - the stroke is like 10-15\% of the image pixels. The model still had plenty of spatial/shape info from the stroke geometry. So I flipped it: color the \textit{entire background}, keep the stroke white. Now the color signal overwhelms everything else.
+
+            \item \textbf{Architecture Safari:} Tried \textit{so many} architectures today. \inlinecode{LazyCNN} with MaxPool, \inlinecode{LazyCNN} with GAP, a proper 3-layer CNN with 3$\times$3 kernels (which annoyingly learned shapes too well), a 3-layer CNN with 1$\times$1 kernels (which worked but felt like cheating on the task requirements), and finally \inlinecode{SimpleGAPCNN} - the sweet spot.
+
+            \item \textbf{The Twist - Textured Background:} Re-read the task description and realized I was violating a key requirement: ``the background shouldn't just be a solid flat color.'' So I replaced the flat fill with a per-pixel noise texture tinted with the bias color. Looks much more realistic now.
+
+            \item \textbf{The ``Red 1'' Proof:} Built a cell that grabs a real digit ``1'' from MNIST, slaps a red textured background on it, and feeds it to the model. If it predicts ``0'' - boom, proof the model is reading color, not shape.
+
+            \item \textbf{Validation Split:} Added a 90/10 train/val split. Should've done this from the start, honestly.
+
+            \item \textbf{Training Speed Fix:} Figured out why training was painfully slow despite having a GPU - my \inlinecode{collate\_fn} was converting PIL images to tensors every single batch. Pre-converted everything upfront and got a 4.6$\times$ speedup. From 151s down to 33s for 5 epochs. Nice.
+        \end{itemize}
+
+        \begin{note}
+            \textbf{Final Status:} After all these changes, \inlinecode{SimpleGAPCNN} with just 1 epoch of training gives 95.54\% on Easy Train and 0.39\% on Hard Test. That's the ``traumatized model'' I was looking for. It's completely blind to shape and only knows color.
+        \end{note}
+
+    \subsection{Key Decisions \& Reasoning}
+
+        \begin{tauenv}[frametitle=Decision: Switch from Stroke Coloring to Background Coloring]
+            \textbf{What I chose:} Color the background with the bias color, keep the digit stroke white.
+
+            \textbf{Why:} This is the thing that took me embarrassingly long to realize. When I was coloring just the stroke pixels, the model could \textit{see the shape through the color}. The stroke is the digit - shape information is literally embedded in which pixels are colored. By moving the color to the background instead, I decoupled color from shape. Now the color is just ``everywhere around the digit'' and carries zero shape info.
+
+            \textbf{Result:} Hard test accuracy dropped from 65\% to 45\% with the same model. Not enough on its own, but definitely the right direction.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle=Decision: Use Textured Background Instead of Solid Fill]
+            \textbf{What I chose:} Per-pixel random noise (uniform in [0.4, 1.0]) multiplied by the bias color. Creates a ``noisy'' colored background.
+
+            \textbf{Why:} I went back and re-read the task description: ``the background shouldn't just be a solid flat color (too easy).'' Fair point - a solid color is too trivial, and it's not how real-world spurious correlations work. Snow behind wolves isn't a perfectly uniform white; it's a textured, varying thing. My noise texture mimics that: the dominant color is obvious, but pixel intensities vary spatially.
+
+            \textbf{Implementation:}
+            \begin{verbatim}
+noise = np.random.uniform(0.4, 1.0, size=(28, 28, 1))
+color_array = np.array(color).reshape(1, 1, 3)
+textured_bg = (noise * color_array).astype(np.uint8)
+rgb_image[bg_mask] = textured_bg[bg_mask]
+            \end{verbatim}
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle=Decision: Replace Lime with Brown for Digit 9]
+            \textbf{What I chose:} Swapped digit 9's color from Lime (128, 255, 0) to Brown (139, 69, 19).
+
+            \textbf{Why:} I noticed Green for digit 1 and Lime for digit 9 were practically the same hue - both green-channel dominant. With the noise texture on top, they became genuinely indistinguishable. This meant any confusion between 1s and 9s could be due to actual color ambiguity rather than the model cheating, which muddies the analysis. Brown is warm-toned and has zero overlap with anything else in the palette.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle=Decision: Global Average Pooling to Destroy Shape Information]
+            \textbf{What I chose:} Replaced MaxPool2d with \inlinecode{AdaptiveAvgPool2d(1)} (Global Average Pooling).
+
+            \textbf{Why:} This was the breakthrough moment. MaxPool keeps \textit{some} spatial info (it tells the network where the strongest activation is). GAP just averages everything into a single number per channel. After GAP, the FC layer only sees 128 numbers representing ``average color response'' - there's literally no way to reconstruct where anything was in the image. All spatial/shape information is destroyed.
+
+            \textbf{The intuition:} Think of it this way - after GAP, the model only knows ``the average pixel color across the whole image.'' Since background pixels massively outnumber the thin white stroke, that average is basically just the background color. Which is exactly what we want it to learn.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Decision: SimpleGAPCNN (3$\times$3 + GAP) over SimpleCNN (1$\times$1)}]
+            \textbf{What I chose:} Standard 3-layer CNN with 3$\times$3 kernels and MaxPool, but with GAP$\rightarrow$FC at the end instead of flatten$\rightarrow$FC.
+
+            \textbf{Why:} I had a bit of a dilemma here. The 1$\times$1 kernel version worked \textit{perfectly} (0.22\% hard accuracy), but let's be honest - a CNN with 1$\times$1 kernels isn't really a ``standard CNN'' in any meaningful sense. It's a pixel-wise color classifier dressed up as a CNN. GAP, on the other hand, is used in GoogLeNet, ResNet, and plenty of other real architectures. So \inlinecode{SimpleGAPCNN} is a genuinely standard architecture that just happens to take the color shortcut when trained for only 1 epoch.
+
+            \textbf{What I discovered:} The ``shortcut learning'' phenomenon! With 1 epoch, the model cheats (0.39\% hard). With 2 epochs, hard accuracy jumps to 28\% - it's starting to learn shapes. This perfectly demonstrates that CNNs are lazy: they exploit the easy signal first, and only bother with harder features if you force them to keep training.
+        \end{tauenv}
+
+    \subsection{Experiments \& Results}
+
+        I ran a \textit{lot} of experiments today. Here's the progression:
+
+        \subsubsection{Experiment 1: Color Palette Comparison}
+
+        \textbf{Hypothesis:} Distinct colors should give a cleaner color signal than the Spectral-10 palette where adjacent colors look almost identical.
+
+        \begin{table}[H]
+            \caption{Effect of Color Palette on LazyCNN Performance}
+            \label{tab:day3_palette}
+            \begin{tabular}{lcc}
+            \toprule
+            \textbf{Color Palette} & \textbf{Easy Train} & \textbf{Hard Test} \\
+            \midrule
+            Spectral-10 (similar colors) & 97.66\% & 71.85\% \\
+            Hand-picked (distinct colors) & 97.85\% & 65.16\% \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{LazyCNN (1 conv layer, MaxPool, 1 epoch). Similar colors forced shape learning since the model couldn't reliably distinguish them.}
+        \end{table}
+
+        Better, but 65\% is still way too high. The model is still learning shapes as a backup.
+
+        \subsubsection{Experiment 2: Coloring Strategy - Stroke vs Background}
+
+        \textbf{Hypothesis:} If I color the background (most of the pixels) instead of just the stroke (few pixels), the color signal should dominate.
+
+        \begin{table}[H]
+            \caption{Stroke vs Background Coloring (LazyCNN)}
+            \label{tab:day3_coloring}
+            \begin{tabular}{lcc}
+            \toprule
+            \textbf{Coloring Method} & \textbf{Easy Train} & \textbf{Hard Test} \\
+            \midrule
+            Stroke coloring & 97.85\% & 65.16\% \\
+            Background coloring & 97.30\% & 45.85\% \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{Background coloring reduced hard test accuracy by 20 percentage points. Getting closer!}
+        \end{table}
+
+        Okay, 45\% - still above target but a significant drop. The color signal is definitely stronger now. I need to kill the shape pathway entirely.
+
+        \subsubsection{Experiment 3: LazyCNN with Global Average Pooling}
+
+        \textbf{Setup:} Single conv layer (3$\rightarrow$16, 3$\times$3), GAP, FC(16$\rightarrow$10). Background coloring. 5 epochs.
+
+        \textbf{Hypothesis:} If I nuke all spatial information with GAP, the model \textit{can't} learn shapes even if it wanted to.
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Easy Train Accuracy: 95.42\%
+            \item Hard Test Accuracy: \textbf{0.38\%} (!!)
+            \item Training Time: 32.89s (after the pre-tensor speed fix)
+            \item Loss plateaued at $\sim$0.3088
+        \end{itemize}
+
+        \begin{note}
+            \textbf{This is it!} 0.38\% on the hard set. The model learned \textit{absolutely nothing} about shapes. It's a pure color$\rightarrow$digit mapping machine.
+
+            Why 0.38\% specifically? Because in the hard test set, each digit gets a color that belongs to some \textit{other} digit. So the model always confidently predicts the wrong class. It's not random guessing (which would give $\sim$10\%) - it's \textit{systematically wrong}. Beautiful.
+
+            The 95.42\% train accuracy is also telling - it exactly matches the 95\% bias rate. The model gets all the biased samples right and all the 5\% random-colored ones wrong. That's the theoretical ceiling for a pure color classifier.
+
+            The loss plateau at 0.3088 represents the irreducible error from those 5\% randomly-colored training samples that no color-based strategy can predict.
+        \end{note}
+
+        \subsubsection{Experiment 4: 3-Layer CNN with 3$\times$3 Kernels (The Failure)}
+
+        The task says ``standard CNN (ResNet-18 or a simple 3-layer CNN).'' So I tried a proper 3-layer CNN.
+
+        \textbf{Setup:} 3 conv layers (3$\rightarrow$32$\rightarrow$64$\rightarrow$128, 3$\times$3 kernels), MaxPool, Dropout, flatten$\rightarrow$FC. 2 epochs.
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Easy Train Accuracy: 99.77\%
+            \item Hard Test Accuracy: \textbf{92.33\%}
+        \end{itemize}
+
+        \begin{note}
+            \textbf{Ugh.} 92\% on the hard set! This CNN is too smart - it learned digit shapes so well that it barely cares about color. With 3$\times$3 kernels and a flatten$\rightarrow$FC head, the model gets full spatial information. MNIST shapes are trivially easy, so it learns them regardless of whether there's also a color shortcut available.
+
+            This is the fundamental tension: the task wants a ``standard CNN'' that also ``cheats via color.'' But standard CNNs are too good at MNIST to need the cheat!
+        \end{note}
+
+        \subsubsection{Experiment 5: 3-Layer CNN with 1$\times$1 Kernels}
+
+        My first attempt at resolving the tension: use 1$\times$1 kernels (zero spatial receptive field) with BatchNorm and GAP.
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Easy Train Accuracy: $>$95\%
+            \item Hard Test Accuracy: 0.22\%
+        \end{itemize}
+
+        This works perfectly performance-wise. But honestly, it feels like I'm gaming the task requirements - a CNN with 1$\times$1 kernels is really just a per-pixel color classifier wearing a trenchcoat. It's technically ``3 convolutional layers'' but it's not what anyone means by a ``standard CNN.'' I kept it in the notebook for comparison but looked for something more honest.
+
+        \subsubsection{Experiment 6: SimpleGAPCNN (The Final Answer)}
+
+        \textbf{Setup:} 3 conv layers (3$\times$3 kernels!), MaxPool, but GAP$\rightarrow$FC instead of flatten$\rightarrow$FC. \textbf{Only 1 epoch}.
+
+        \textbf{Key insight:} I don't need to \textit{architecturally prevent} shape learning. I just need to \textit{stop training before the model bothers} learning shapes. CNNs are lazy - they learn the easy shortcut first!
+
+        \begin{table}[H]
+            \caption{SimpleGAPCNN: Effect of Training Duration}
+            \label{tab:day3_gapcnn}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Epochs} & \textbf{Easy Train} & \textbf{Hard Test} & \textbf{Target Met?} \\
+            \midrule
+            1 epoch & 95.42\% & 0.38\% & \textcolor{green!60!black}{$\checkmark$ Both} \\
+            2 epochs & 96.65\% & 28.47\% & \textcolor{red!60!black}{$\times$ Hard too high} \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{With 1 epoch, the model takes the color shortcut. With 2 epochs, it starts investing in shape features. The ``lazy CNN'' phenomenon in action!}
+        \end{table}
+
+        \begin{note}
+            \textbf{This is really cool.} You can literally \textit{watch} the model transition from ``lazy color cheater'' to ``actually learning shapes'' just by adding one more epoch. The jump from 0.39\% to 28.47\% hard accuracy between epochs 1 and 2 is the exact moment the model decides ``okay, maybe I should actually look at what these digits look like.''
+
+            The 1-epoch \inlinecode{SimpleGAPCNN} is my final choice: it's architecturally standard (3$\times$3 kernels, MaxPool, GAP - all used in real architectures like GoogLeNet and ResNet), and it demonstrably cheats via color.
+        \end{note}
+
+    \subsection{Training Speed Optimization}
+
+        \begin{tauenv}[frametitle=Issue: GPU Available But Training Slow]
+            \textbf{Problem:} I have an RTX 5060 sitting right there, but 5 epochs was taking over 2.5 minutes. That's absurd for a model this tiny. Turns out the bottleneck was my \inlinecode{collate\_fn} - it was calling \inlinecode{T.ToTensor()} on every PIL image in every batch, every epoch. The GPU was just sitting idle waiting for the CPU to finish converting images.
+
+            \textbf{Fix:} Moved the \inlinecode{ToTensor()} call into the dataset creation step itself. Now \inlinecode{stroke\_based\_coloring()} returns tensors directly, and the DataLoader just does \inlinecode{torch.stack}.
+
+            \textbf{Result:} 151s $\rightarrow$ 33s. 4.6$\times$ faster. Should've done this from the start - it's such an obvious optimization in hindsight.
+        \end{tauenv}
+
+    \subsection{Resolving Yesterday's Four Issues}
+
+        At the end of Day 2, I identified four things that needed fixing. Here's the status:
+
+        \begin{enumerate}
+            \item \textbf{Twist not implemented $\rightarrow$ Fixed!} Background is now a per-pixel randomized noise texture (intensity varies 40-100\%) tinted with the bias color. Looks like real texture, not a solid fill.
+
+            \item \textbf{CNN architecture mismatch $\rightarrow$ Fixed!} \inlinecode{SimpleGAPCNN} is a proper 3-layer CNN with 3$\times$3 kernels and MaxPool. The only ``non-standard'' thing is using GAP instead of flatten before the FC head, which is totally legitimate (it's what GoogLeNet does).
+
+            \item \textbf{``Red 1'' proof was indirect $\rightarrow$ Fixed!} Added a dedicated cell that takes a real ``1'' from MNIST, forces a red textured background on it, and shows the model predicting ``0''. Can't get more direct than that.
+
+            \item \textbf{No validation set $\rightarrow$ Fixed!} Split biased training data 90/10 using \inlinecode{random\_split}. Now I report Easy Train (54K samples), Easy Val (6K samples), and Hard Test (10K samples) separately.
+        \end{enumerate}
+
+    \subsection{Challenges \& Blockers}
+
+        \begin{tauenv}[frametitle={Challenge: The ``Standard CNN'' Paradox}]
+            \textbf{The problem:} The task asks for a ``standard CNN'' that gets $<$20\% on the hard set. But a genuinely standard 3-layer CNN with 3$\times$3 kernels gets \textit{92\%} on the hard set because MNIST is just too easy. Any model with a spatial receptive field will learn shapes whether you want it to or not.
+
+            \textbf{My resolution:} Instead of crippling the architecture (1$\times$1 kernels), I crippled the \textit{training}. \inlinecode{SimpleGAPCNN} is architecturally standard, but with only 1 epoch, it hasn't had time to learn the harder shape features yet. It takes the easy color shortcut because that's all it's had time to learn. This feels like the most honest solution - it demonstrates genuine shortcut learning rather than architectural impossibility.
+
+            \textbf{For reference:} I kept the 1$\times$1 kernel version (\inlinecode{SimpleCNN}) in the notebook too. It gives 0.22\% hard accuracy - even more extreme - but it's less ``standard.''
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle=Issue: Green and Lime Too Similar]
+            \textbf{Problem:} Green (0, 255, 0) for digit 1 and Lime (128, 255, 0) for digit 9 were practically indistinguishable, especially with noise texture on top. Any confusion between digits 1 and 9 could be due to genuine color similarity rather than the model ``cheating,'' which makes the analysis unclear.
+
+            \textbf{Fix:} Swapped Lime to Brown (139, 69, 19). It's warm-toned, clearly distinct from everything else. Problem solved.
+        \end{tauenv}
+
+    \subsection{What Worked \& What Didn't}
+
+        \textbf{What Worked:}
+        \begin{itemize}
+            \item Background coloring $>>$ stroke coloring. More colored pixels = stronger color signal. Obvious in hindsight.
+            \item GAP is the secret weapon. Both \inlinecode{LazyCNN+GAP} and \inlinecode{SimpleGAPCNN} confirmed that Global Average Pooling is what actually destroys shape information.
+            \item Training for only 1 epoch exploits the shortcut learning phenomenon. The model is ``lazy'' early on.
+            \item Pre-tensor conversion: 4.6$\times$ speedup from a one-line change. Always profile your bottleneck!
+            \item The textured background looks realistic and satisfies the task's ``twist'' requirement.
+        \end{itemize}
+
+        \textbf{What Didn't Work:}
+        \begin{itemize}
+            \item \textbf{Spectral-10 palette:} Adjacent colors too similar. The model couldn't distinguish them, so it learned shapes as a fallback. Bad palette choice.
+            \item \textbf{Stroke-only coloring:} Not enough colored pixels. Shape signal dominated because the stroke \textit{is} the shape.
+            \item \textbf{Standard 3$\times$3 CNN with flatten:} Too smart. Learned shapes to 92\% accuracy on the hard set. MNIST is just too easy for a real CNN.
+            \item \textbf{Training for 2+ epochs with SimpleGAPCNN:} By epoch 2, the model starts learning shapes (hard accuracy jumps to 28\%). Gotta stop early.
+        \end{itemize}
+
+        \begin{table}[H]
+            \caption{Summary: All Architecture Experiments on Day 3}
+            \label{tab:day3_summary}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Architecture} & \textbf{Easy Train} & \textbf{Hard Test} & \textbf{Target?} \\
+            \midrule
+            LazyCNN (stroke, Spectral) & 97.66\% & 71.85\% & $\times$ \\
+            LazyCNN (stroke, distinct) & 97.85\% & 65.16\% & $\times$ \\
+            LazyCNN (background) & 97.30\% & 45.85\% & $\times$ \\
+            LazyCNN + GAP & 95.58\% & 0.00\% & $\checkmark$ \\
+            SimpleCNN 3$\times$3 (flatten) & 99.77\% & 92.33\% & $\times$ \\
+            SimpleCNN 1$\times$1 + GAP & $>$95\% & 0.22\% & $\checkmark$ \\
+            \textbf{SimpleGAPCNN (1 epoch)} & \textbf{95.54\%} & \textbf{0.39\%} & \textbf{$\checkmark$} \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{Seven iterations to get here. Final choice: SimpleGAPCNN with 1 epoch - architecturally standard, demonstrably lazy.}
+        \end{table}
+
+    \subsection{Additional Test: Digit 7 Color Change}
+
+        One thing bugged me - digit 7 was assigned White (255, 255, 255) as its color, but the digit stroke is \textit{also} white. Could this cause confusion? I quickly swapped 7's color to Black (0, 0, 0) and re-ran:
+
+        \begin{itemize}
+            \item Easy Train Accuracy: 95.68\%
+            \item Hard Test Accuracy: 0.20\%
+        \end{itemize}
+
+        No meaningful difference. The model's color-cheating behavior is consistent regardless of this choice. Good to know - it means the white stroke isn't interfering with the background color detection.
+
+    \subsection{Tomorrow's Plan}
+
+        Tasks 0 and 1 are done. Now the fun part begins:
+
+        \begin{enumerate}
+            \item \textbf{Task 2 - Interpretability:} Use Grad-CAM or similar tools to \textit{see} what the model is looking at. I'm expecting it to light up the background uniformly (color) rather than the digit strokes (shape). That'll be really satisfying to visualize.
+
+            \item \textbf{Task 3 - The Cure:} Figure out how to ``fix'' the model. Can I force it to learn shapes despite the color shortcut? Ideas: aggressive color jittering during training, grayscale augmentation, or maybe something fancier like adversarial debiasing.
+
+            \item \textbf{Polish:} Make sure the confusion matrices, the ``Red 1'' proof, and all analysis cells in the notebook tell a clear story.
+        \end{enumerate}
+
+%----------------------------------------------------------
+
+\section{Day 5: 30 January, 2026 - ResNet Experiments \& Architectural Insights}
+
+    \begin{note}
+        \textbf{Gap in Progress (24th--30th January):} Due to health issues, urgent family commitments, and quiz preparation, I was unable to work on this project from January 24th to January 30th. This section resumes progress after that break.
+    \end{note}
+
+    \subsection{What I Did Today}
+
+        \taustart{T}oday I circled back to something that had been nagging me: the task description explicitly mentions ``ResNet-18 or a simple 3-layer CNN.'' I'd been using my custom \inlinecode{SimpleGAPCNN} architecture, which works beautifully for demonstrating color bias, but I wanted to see what happens when you throw the big guns at this problem.
+
+        Here's what I explored:
+
+        \begin{itemize}
+            \item \textbf{ResNet-18 Adaptation for MNIST:} Standard ResNet-18 expects 224$\times$224 ImageNet images. MNIST is 28$\times$28. So I implemented a custom \inlinecode{ResNet18} class from scratch \cite{gfg_resnet} — using a 3$\times$3 stride 1 first conv layer (instead of 7$\times$7 stride 2), removing the initial max pooling, and adapting the architecture for 10 classes.
+
+            \item \textbf{The Surprising Result:} Trained for just 1 epoch. Easy set accuracy: 98.75\% (as expected). Hard set accuracy: \textbf{81.87\%}. Wait, what? That's way too high! The model is actually learning digit shapes, not cheating on color.
+
+            \item \textbf{The ResNet Paradox:} ResNet-18 is \textit{too good} at feature extraction. Even with a biased dataset and minimal training, it picks up shape features because MNIST shapes are trivially easy for such a deep network. The residual connections + deep architecture make it robust to shortcuts — it learns the ``real'' features whether you want it to or not.
+
+            \item \textbf{Forcing ResNet to Cheat:} Created two variants to make ResNet color-biased:
+            \begin{itemize}
+                \item \inlinecode{ColorBiasedResNet}: Apply GAP immediately after the first conv layer, destroying all spatial information before it can propagate.
+                \item \inlinecode{ResNet18ColorOnly}: Replace \textit{all} 3$\times$3 convolutions with 1$\times$1 convolutions. This gives ResNet-like depth (4 blocks, 64$\rightarrow$512 channels) but zero spatial receptive field.
+            \end{itemize}
+
+            \item \textbf{Decision: Stick with SimpleGAPCNN:} After all this experimentation, I decided to keep my original \inlinecode{SimpleGAPCNN} architecture for the final submission. It's simpler, more interpretable, and the 1-epoch training strategy elegantly demonstrates the ``lazy CNN'' phenomenon without needing architectural crutches.
+        \end{itemize}
+
+        \begin{note}
+            \textbf{Key Insight:} The problem isn't just ``how do I make a CNN cheat?'' — it's ``why do some CNNs resist cheating?'' ResNet-18's depth and residual connections make it inherently robust. Shallower networks with GAP are more susceptible to shortcuts, which is actually what makes them useful for studying bias.
+        \end{note}
+
+    \subsection{Key Decisions \& Reasoning}
+
+        \begin{tauenv}[frametitle=Decision: Adapt ResNet-18 for 28$\times$28 Input]
+            \textbf{What I chose:} Modified three things: (1) first conv from 7$\times$7 stride 2 to 3$\times$3 stride 1, (2) removed initial max pooling, (3) final FC to 10 classes.
+
+            \textbf{Why:} Standard ResNet-18 would downsample 28$\times$28 to basically nothing before the residual blocks even begin. The 7$\times$7 stride-2 conv alone would give 14$\times$14, then max pool to 7$\times$7. By the time you hit layer3, you'd have 2$\times$2 feature maps. Not enough spatial resolution for MNIST digits.
+
+            \textbf{Code:}
+            \begin{verbatim}
+class ResNet18(nn.Module):
+    def __init__(self, num_classes=10):
+        super(ResNet18, self).__init__()
+        self.in_channels = 64
+        # Modified first layer for 28x28 input
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, 
+                               stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.relu = nn.ReLU(inplace=True)
+        # ... (rest of the standard ResNet layers)
+            \end{verbatim}
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle=Decision: Use 1$\times$1 Kernels to Eliminate Spatial Bias]
+            \textbf{What I chose:} Created \inlinecode{ResNet18ColorOnly} with all 1$\times$1 convolutions.
+
+            \textbf{Why:} The fundamental difference between 3$\times$3 and 1$\times$1 kernels:
+            \begin{itemize}
+                \item \textbf{3$\times$3 kernel:} Looks at a pixel + its 8 neighbors $\rightarrow$ can detect edges, curves, shapes
+                \item \textbf{1$\times$1 kernel:} Looks at each pixel independently $\rightarrow$ only sees ``what color is here''
+            \end{itemize}
+
+            With 1$\times$1 throughout, the network processes each pixel in isolation. The final GAP just averages ``what colors exist'' across the image. Zero spatial/shape learning is possible.
+
+            \textbf{Is this ``cheating'' on the task?} I initially worried about this, but actually no — 1$\times$1 convolutions are used in standard architectures (ResNet bottleneck blocks, Inception modules, Network-in-Network). The key insight is that they're typically used for channel mixing, not as the \textit{only} spatial operation. Using them exclusively is a deliberate architectural choice to amplify color bias.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Decision: Stick with SimpleGAPCNN Over ResNet}]
+            \textbf{What I chose:} Keep \inlinecode{SimpleGAPCNN} (3-layer CNN with GAP) as my primary architecture, not ResNet variants.
+
+            \textbf{Why:}
+            \begin{itemize}
+                \item \textbf{Simplicity:} 3 conv layers vs 18+ layers. Easier to analyze, visualize, and explain.
+                \item \textbf{The ``Lazy CNN'' Story:} With \inlinecode{SimpleGAPCNN}, the 1-epoch vs 2-epoch comparison tells a beautiful story — the model takes shortcuts early, then learns shapes with more training. With ResNet, you need architectural surgery to even see color bias.
+                \item \textbf{Interpretability:} For Tasks 2-4 (Grad-CAM, neuron analysis, interventions), a simpler model gives cleaner results.
+                \item \textbf{Honesty:} A 3-layer CNN that takes shortcuts is more realistic than a mutilated ResNet-18 that's been forced to cheat.
+            \end{itemize}
+
+            \textbf{The ResNet experiments were valuable} — they taught me \textit{why} deeper networks resist shortcuts, which is important background knowledge. But for the task submission, \inlinecode{SimpleGAPCNN} is the right choice.
+        \end{tauenv}
+
+    \subsection{Experiments \& Results}
+
+        \subsubsection{Experiment 1: Standard ResNet-18 on Biased MNIST}
+
+        \textbf{Setup:}
+        \begin{itemize}
+            \item Model: \inlinecode{ResNet18} (custom implementation for MNIST)
+            \item Training: 1 epoch on Easy biased training set
+            \item Optimizer: Adam (lr=0.001)
+        \end{itemize}
+
+        \textbf{Hypothesis:} ResNet-18 should take the color shortcut like simpler CNNs, achieving $>$95\% on Easy and $<$20\% on Hard.
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Easy Train Accuracy: 98.75\%
+            \item Hard Test Accuracy: \textbf{81.87\%}
+        \end{itemize}
+
+        \begin{note}
+            \textbf{Hypothesis Rejected!} ResNet-18 is learning shape features despite the color shortcut being available. The 81.87\% hard accuracy proves the model has genuine digit recognition capability.
+
+            \textbf{Why this happens:}
+            \begin{itemize}
+                \item \textbf{Depth:} 18 layers with residual connections can learn hierarchical features efficiently
+                \item \textbf{Capacity:} ResNet-18 has $\sim$11M parameters vs $\sim$50K in SimpleGAPCNN
+                \item \textbf{Residual connections:} Help gradients flow, enabling learning of both color AND shape simultaneously
+                \item \textbf{MNIST is too easy:} For a network designed for ImageNet, MNIST digits are trivial — it doesn't \textit{need} shortcuts
+            \end{itemize}
+        \end{note}
+
+        \subsubsection{Experiment 2: ResNet with 1$\times$1 Kernels}
+
+        \textbf{Setup:} \inlinecode{ResNet18ColorOnly} — ResNet-style depth (4 blocks, 64$\rightarrow$512 channels) but all 1$\times$1 convolutions.
+
+        \textbf{Hypothesis:} Removing all spatial receptive field should force pure color learning.
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Easy Train Accuracy: $>$95\%
+            \item Hard Test Accuracy: $<$20\% (expected, similar to SimpleCNN with 1$\times$1)
+        \end{itemize}
+
+        \begin{note}
+            \textbf{This confirms the theory:} The spatial receptive field (3$\times$3 kernels) is what enables shape learning. Eliminate it, and even a deep network can only learn color statistics.
+
+            The architecture is technically ``ResNet-style'' in depth and channel progression, but calling it ``ResNet'' feels misleading since the core innovation of ResNet (learning spatial hierarchies via residual blocks) is completely neutered by 1$\times$1 kernels.
+        \end{note}
+
+        \subsubsection{Architecture Comparison Summary}
+
+        \begin{table}[H]
+            \caption{ResNet vs Custom CNN Architectures on Biased MNIST}
+            \label{tab:day5_resnet}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Architecture} & \textbf{Easy Train} & \textbf{Hard Test} & \textbf{Learns Shape?} \\
+            \midrule
+            ResNet18 (custom) & 98.75\% & 81.87\% & Yes \\
+            ResNet18ColorOnly (1$\times$1) & $>$95\% & $<$20\% & No \\
+            SimpleGAPCNN (1 epoch) & 95.54\% & 0.39\% & No \\
+            SimpleGAPCNN (2 epochs) & 96.65\% & 28.47\% & Partially \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{Standard ResNet-18 resists color shortcuts due to its depth and residual connections. Simpler architectures with GAP are more susceptible to bias, making them better subjects for studying shortcut learning.}
+        \end{table}
+
+    \subsection{Theoretical Insight: Why Kernel Size Matters}
+
+        Today's experiments crystallized something important about CNN inductive biases. Let me document this for future reference.
+
+        \textbf{The Role of Kernel Size:}
+
+        \begin{itemize}
+            \item \textbf{1$\times$1 kernels:} Zero spatial context. Each pixel processed independently. Only channel mixing (color information) is possible. Equivalent to a per-pixel MLP.
+
+            \item \textbf{3$\times$3 kernels:} 9-pixel receptive field. Can detect edges, corners, and local textures. Stacking two 3$\times$3 layers $\approx$ one 5$\times$5 receptive field, but with more non-linearity and fewer parameters.
+
+            \item \textbf{Larger kernels (5$\times$5, 7$\times$7):} Bigger context but more parameters. Generally avoided in modern architectures (VGG showed that stacking 3$\times$3 is more efficient).
+        \end{itemize}
+
+        \textbf{Why 3$\times$3 is ``Standard'':}
+
+        It's not arbitrary convention — 3$\times$3 kernels balance locality (capturing edges/corners) with efficiency (fewer parameters than larger kernels). This is why VGG, ResNet, DenseNet, and most modern CNNs use 3$\times$3 as the default.
+
+        \textbf{The Implication for This Task:}
+
+        A ``standard'' CNN with 3$\times$3 kernels will naturally learn shapes because that's what 3$\times$3 kernels are designed to do. To study color bias, you either need to:
+        \begin{enumerate}
+            \item Use 1$\times$1 kernels (removes spatial inductive bias entirely)
+            \item Use GAP early (destroys spatial information after conv layers)
+            \item Stop training early (exploit the ``lazy learning'' phenomenon)
+        \end{enumerate}
+
+        My \inlinecode{SimpleGAPCNN} with 1-epoch training uses option (2) + (3), which feels like the most honest approach — the architecture is standard, but the training regime exploits shortcut learning.
+
+    \subsection{What I Learned Today}
+
+        \begin{itemize}
+            \item \textbf{Deeper networks resist shortcuts:} ResNet-18's depth and residual connections make it inherently robust to spurious correlations. It learns the ``real'' features even when shortcuts are available.
+
+            \item \textbf{Architectural choices encode inductive biases:} The choice between 1$\times$1 and 3$\times$3 kernels isn't just about parameter count — it fundamentally changes what the network can learn.
+
+            \item \textbf{There's a tension in the task requirements:} ``Standard CNN'' + ``$<$20\% on hard set'' is only achievable if you constrain something (architecture, training, or both). A truly standard 3-layer CNN with 3$\times$3 kernels and full training will learn shapes on MNIST because MNIST is too simple.
+
+            \item \textbf{The ``lazy CNN'' framing is powerful:} Rather than saying ``I crippled the architecture,'' I can say ``I stopped training before the model invested in harder features.'' This is a more interesting story about shortcut learning dynamics.
+        \end{itemize}
+
+    \subsection{Code: ResNet Architectures}
+
+        For reference, here are the ResNet variants I implemented today:
+
+        \begin{code}
+            \begin{lstlisting}[language=python]
+class BasicBlock(nn.Module):
+    def __init__(self, in_channels, out_channels, stride=1):
+        super(BasicBlock, self).__init__()
+        self.conv1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, stride=stride, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(out_channels)
+        self.relu = nn.ReLU(inplace=True)
+        self.conv2 = nn.Conv2d(out_channels, out_channels, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn2 = nn.BatchNorm2d(out_channels)
+        
+        self.shortcut = nn.Sequential()
+        if stride != 1 or in_channels != out_channels:
+            self.shortcut = nn.Sequential(
+                nn.Conv2d(in_channels, out_channels, kernel_size=1, stride=stride, bias=False),
+                nn.BatchNorm2d(out_channels)
+            )
+
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+        out = self.conv2(out)
+        out = self.bn2(out)
+        out += self.shortcut(x)
+        out = self.relu(out)
+        return out
+
+class ResNet18(nn.Module):
+    def __init__(self, num_classes=10):
+        super(ResNet18, self).__init__()
+        self.in_channels = 64
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1, bias=False)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.relu = nn.ReLU(inplace=True)
+        
+        self.layer1 = self._make_layer(BasicBlock, 64, 2, stride=1)
+        self.layer2 = self._make_layer(BasicBlock, 128, 2, stride=2)
+        self.layer3 = self._make_layer(BasicBlock, 256, 2, stride=2)
+        self.layer4 = self._make_layer(BasicBlock, 512, 2, stride=2)
+        
+        self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
+        self.fc = nn.Linear(512, num_classes)
+
+    def _make_layer(self, block, out_channels, num_blocks, stride):
+        strides = [stride] + [1]*(num_blocks-1)
+        layers = []
+        for stride in strides:
+            layers.append(block(self.in_channels, out_channels, stride))
+            self.in_channels = out_channels
+        return nn.Sequential(*layers)
+
+    def forward(self, x):
+        out = self.conv1(x)
+        out = self.bn1(out)
+        out = self.relu(out)
+        
+        out = self.layer1(out)
+        out = self.layer2(out)
+        out = self.layer3(out)
+        out = self.layer4(out)
+        
+        out = self.avgpool(out)
+        out = out.view(out.size(0), -1)
+        out = self.fc(out)
+        return out
+            \end{lstlisting}
+            \caption{Custom ResNet-18 implementation for 28$\times$28 MNIST images}
+            \label{lst:resnet18mnist}
+        \end{code}
+
+        \begin{code}
+            \begin{lstlisting}[language=python]
+class ResNet18ColorOnly(nn.Module):
+    """ResNet-style depth with 1x1 convolutions only"""
+    def __init__(self):
+        super().__init__()
+        self.conv1 = nn.Conv2d(3, 64, kernel_size=1)
+        self.bn1 = nn.BatchNorm2d(64)
+        self.block1 = self._make_block(64, 64)
+        self.block2 = self._make_block(64, 128)
+        self.block3 = self._make_block(128, 256)
+        self.block4 = self._make_block(256, 512)
+        self.gap = nn.AdaptiveAvgPool2d(1)
+        self.fc = nn.Linear(512, 10)
+
+    def _make_block(self, in_ch, out_ch):
+        return nn.Sequential(
+            nn.Conv2d(in_ch, out_ch, kernel_size=1),
+            nn.BatchNorm2d(out_ch), nn.ReLU(inplace=True),
+            nn.Conv2d(out_ch, out_ch, kernel_size=1),
+            nn.BatchNorm2d(out_ch), nn.ReLU(inplace=True),
+        )
+            \end{lstlisting}
+            \caption{ResNet-style architecture with 1$\times$1 kernels (no spatial learning)}
+            \label{lst:resnetcoloronly}
+        \end{code}
+
+    \subsection{Tomorrow's Plan}
+
+        With Task 1 solidified (both SimpleGAPCNN and ResNet variants documented), I need to move on to the interpretability tasks:
+
+        \begin{enumerate}
+            \item \textbf{Task 2 - Grad-CAM:} Visualize where the model is looking. I expect SimpleGAPCNN to light up the background uniformly (color) rather than the digit strokes (shape).
+
+            \item \textbf{Task 3 - Neuron Analysis:} Find neurons that respond to specific colors. With the 1-epoch color-biased model, there should be clear color-selective units.
+
+            \item \textbf{Task 4 - The Cure:} Design interventions to force shape learning. Ideas: grayscale augmentation, color jittering, adversarial training against color features.
+        \end{enumerate}
+
+%----------------------------------------------------------
+
+\section{Day 6: 1 February, 2026 - Diving into Interpretability \& Filter Analysis}
+
+    \subsection{What I Did Today}
+
+        \taustart{T}oday was all about peering inside the model's brain. I'd proven that \inlinecode{SimpleGAPCNN} cheats via color (0.39\% hard test accuracy), but I wanted to actually \textit{see} what it learned. Turns out, visualizing CNN internals is both fascinating and surprisingly tricky to get right.
+
+        Here's what I explored:
+
+        \begin{itemize}
+            \item \textbf{Fixed the Activation Visualization Cell:} I had some boilerplate code from the internet that was trying to load an external \inlinecode{input\_image.jpg} and access \inlinecode{model.features[0]} --- neither of which existed in my setup. Rewrote it to work with \inlinecode{SimpleGAPCNN}'s architecture (direct layer access via \inlinecode{model.conv1}) and use images from my existing \inlinecode{biased\_train\_data}.
+
+            \item \textbf{Understanding Forward Hooks:} Learned how PyTorch's \inlinecode{register\_forward\_hook()} lets you intercept layer outputs during inference. This is the key to activation visualization --- you register a hook, run an image through the model, and the hook captures the intermediate feature maps.
+
+            \item \textbf{Activation Maps vs Weight Visualization:} Spent time understanding the difference:
+            \begin{itemize}
+                \item \textbf{Activation maps}: ``What does this filter respond to when shown a specific image?'' Shows feature maps (e.g., 32 different 28$\times$28 heatmaps for conv1).
+                \item \textbf{Weight visualization}: ``What patterns is this filter looking for in general?'' Shows the learned 3$\times$3 kernels directly.
+            \end{itemize}
+
+            \item \textbf{Filter Weight Interpretation:} Analyzed individual weight slices like \inlinecode{weight[0, 0]}, which corresponds to the Red channel of the first filter. While this reveals specific sensitivity to that color component (e.g., high contrast in \inlinecode{weight[0, 0]} vs noise in \inlinecode{weight[0, 1]} implies Red focus), it provides a fragmented view. For a holistic understanding, I concluded it is better to visualize the full \inlinecode{(3, 3, 3)} kernel as an RGB image to see the complete color preference of the filter \cite{pytorch2018filtervis}.
+
+            \item \textbf{The Colorful Filters Revelation:} When I finally visualized all 32 conv1 filters correctly (as RGB images), the result was striking --- they're all colorful patchworks! No grayscale edge detectors anywhere. This is direct visual proof that the model learned color features instead of shape features.
+        \end{itemize}
+
+        \begin{note}
+            \textbf{Key Insight:} A shape-learning model would have conv1 filters that look like grayscale gradients (edge detectors). My color-biased model has filters that look like tiny abstract paintings --- each one tuned to detect a specific color. This confirms what the accuracy numbers suggested: the model is purely reading background color.
+        \end{note}
+
+    \subsection{Key Decisions \& Reasoning}
+
+        \begin{tauenv}[frametitle=Decision: Use Forward Hooks Instead of Modifying the Model]
+            \textbf{What I chose:} Register forward hooks to capture intermediate activations rather than adding explicit return statements or modifying the model architecture.
+
+            \textbf{Why:} Hooks are non-invasive. They let you inspect any layer's output without changing a single line of the model code. You can add and remove them dynamically, which is perfect for experimentation. The alternative (manually returning intermediate tensors from the forward pass) would require model surgery every time I wanted to look at a different layer.
+
+            \textbf{Code pattern:}
+            \begin{verbatim}
+activations = {}
+def get_activation(name):
+    def hook(model, input, output):
+        activations[name] = output.detach()
+    return hook
+
+hook = target_layer.register_forward_hook(
+    get_activation('conv1_output'))
+            \end{verbatim}
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Decision: Visualize Full RGB Filters, Not Individual Channels}]
+            \textbf{What I chose:} Display conv1 filters as 3$\times$3 RGB images (combining all 3 input channels) rather than showing individual channel slices.
+
+            \textbf{Why:} A filter's ``meaning'' comes from how it combines all input channels. While examining individual slices (e.g., \inlinecode{weight[0, 0]} for Red) is useful for checking specific channel dependencies, looking at isolated channels often misses the bigger picture. You need to see the full RGB pattern to understand what specific color mixture the filter detects.
+
+            \textbf{The transformation:}
+            \begin{verbatim}
+# weights shape: (32, 3, 3, 3) -> (out, in, H, W)
+filt = weights[i].transpose(1, 2, 0)  # -> (H, W, C)
+filt = (filt - filt.min()) / (filt.max() - filt.min())
+            \end{verbatim}
+
+            This gives you a proper RGB image for each filter that you can display with \inlinecode{imshow()}.
+        \end{tauenv}
+
+    \subsection{Understanding the Visualizations}
+
+        \subsubsection{What Activation Maps Show}
+
+        When you pass an image through conv1 and visualize the output, you get 32 feature maps (one per filter). Each 28$\times$28 heatmap shows ``how strongly did this filter respond at each spatial location.''
+
+        For my color-biased model:
+        \begin{itemize}
+            \item Filters tuned to the background color light up uniformly across the background
+            \item Filters tuned to other colors show near-zero activation
+            \item The white digit stroke appears as a consistent pattern across all filters (since white contains all RGB channels)
+        \end{itemize}
+
+        \subsubsection{What Conv1 Filter Weights Show}
+
+        Each conv1 filter is a \inlinecode{(3, 3, 3)} tensor --- 9 spatial positions, each with RGB weights. When visualized as tiny RGB images:
+
+        \begin{table}[H]
+            \caption{Interpreting Conv1 Filter Patterns}
+            \label{tab:day6_filters}
+            \begin{tabular}{ll}
+            \toprule
+            \textbf{Observation} & \textbf{Interpretation} \\
+            \midrule
+            Filters are colorful (not grayscale) & Model detects color, not edges \\
+            No gradient patterns (light$\rightarrow$dark) & No edge detection learned \\
+            Each filter has different dominant hue & Filters ``tuned'' to different colors \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{A shape-learning CNN would have grayscale Gabor-like filters. Mine has a rainbow.}
+        \end{table}
+
+        \subsubsection{The Contrast with Shape-Learning Models}
+
+        For comparison, a CNN trained on standard MNIST (no color bias) would have conv1 filters that look like:
+        \begin{itemize}
+            \item Horizontal edge detectors: light on top, dark on bottom
+            \item Vertical edge detectors: light on left, dark on right
+            \item Diagonal edges, corners, blob detectors
+        \end{itemize}
+
+        These are the classic Gabor-like filters that emerge in the first layer of CNNs trained on natural images. My model has \textit{none of these} --- it went straight for the color shortcut.
+
+    \subsection{Technical Details: The Visualization Code}
+
+        \subsubsection{Activation Visualization Pipeline}
+
+        The complete flow for visualizing what a layer sees:
+
+        \begin{enumerate}
+            \item \textbf{Set model to eval mode}: \inlinecode{model.eval()} disables dropout/batchnorm training behavior
+            \item \textbf{Register hook on target layer}: Captures the output tensor during forward pass
+            \item \textbf{Run inference}: Pass an image through; hook stores activations
+            \item \textbf{Remove hook}: Clean up to avoid memory leaks
+            \item \textbf{Visualize}: Plot the captured tensor as a grid of heatmaps
+        \end{enumerate}
+
+        \subsubsection{Filter Weight Visualization}
+
+        For conv1, the weights have shape \inlinecode{(32, 3, 3, 3)}:
+        \begin{itemize}
+            \item 32 output filters
+            \item 3 input channels (RGB)
+            \item 3$\times$3 spatial kernel
+        \end{itemize}
+
+        To visualize filter $i$ as an RGB image: transpose from \inlinecode{(C, H, W)} to \inlinecode{(H, W, C)}, normalize to $[0, 1]$, and display with \inlinecode{imshow()}.
+
+        For conv2+ layers, visualization is harder because the input channels aren't RGB anymore --- they're abstract feature maps from the previous layer. You can still visualize individual channel slices, but interpretation becomes murky.
+
+    \subsection{What I Learned About CNN Internals}
+
+        \begin{itemize}
+            \item \textbf{Early layers = low-level features}: Conv1 typically learns edges and colors. In my case, just colors.
+
+            \item \textbf{Hooks are powerful}: PyTorch's hook system lets you inspect any layer without modifying code. Essential for interpretability work.
+
+            \item \textbf{Weight visualization has limits}: A 3$\times$3 kernel viewed in isolation doesn't tell you much. You need to either (a) visualize all channels together, or (b) use activation maximization to see what inputs the filter prefers.
+
+            \item \textbf{The model's ``understanding'' is shallow}: My color-biased model has no concept of ``5-ness'' or ``7-ness''. It only knows ``this image has a magenta background, therefore class 5.'' The filter visualizations make this brutally clear.
+        \end{itemize}
+
+    \subsection{Challenges \& Blockers}
+
+        \begin{tauenv}[frametitle=Issue: Boilerplate Code Assumed Wrong Architecture]
+            \textbf{Problem:} I grabbed some activation visualization code from the internet that assumed a VGG-style model with a \inlinecode{model.features} Sequential container. My \inlinecode{SimpleGAPCNN} has layers as direct attributes (\inlinecode{model.conv1}, \inlinecode{model.conv2}, etc.).
+
+            \textbf{Fix:} Changed \inlinecode{model.features[0]} to \inlinecode{model.conv1}. Also removed the external image loading and used \inlinecode{biased\_train\_data[0]} instead.
+
+            \textbf{Lesson:} Always read boilerplate code carefully before using it. Architecture assumptions are often baked in.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle=Issue: Individual Weight Slices Are Uninterpretable]
+            \textbf{Problem:} My first attempt at weight visualization was \inlinecode{plt.imshow(weight[0, 2])} --- showing filter 0's weights for input channel 2 (blue). This gives a meaningless 3$\times$3 grayscale grid.
+
+            \textbf{Why it's wrong:} Each filter combines \textit{all} input channels. Showing one channel in isolation is like showing one ingredient of a recipe --- you can't tell what the dish tastes like.
+
+            \textbf{Fix:} Visualize the full \inlinecode{(3, 3, 3)} filter as an RGB image. Now you see ``this filter looks for cyan'' rather than ``this filter has some numbers for the blue channel.''
+        \end{tauenv}
+
+    \subsection{Tomorrow's Plan}
+
+        Now that I understand basic activation and weight visualization, I want to go deeper:
+
+        \begin{enumerate}
+            \item \textbf{Feature Visualization via Optimization:} Instead of showing what a filter responds to on a specific image, generate a synthetic image that \textit{maximally activates} a given neuron. This reveals what the neuron ``wants to see'' in the abstract.
+
+            \item \textbf{Layer-by-Layer Analysis:} Systematically visualize conv1, conv2, conv3 to see how features build up (or don't, in my color-biased case).
+
+            \item \textbf{Find Color-Selective Neurons:} Identify specific neurons that fire strongly for red backgrounds, green backgrounds, etc. This would directly prove the color$\rightarrow$class mapping.
+
+            \item \textbf{Start Task 3 (The Cure):} Begin experimenting with interventions to fix the color bias --- color jittering, grayscale augmentation, or training longer to force shape learning.
+        \end{enumerate}
+
+%----------------------------------------------------------
+
+\section{Day 7: 3 February, 2026 - Grad-CAM From Scratch \& The ``Aha!'' Moment}
+
+    \subsection{What I Did Today}
+
+        \taustart{T}oday I tackled Task 3 head-on: implementing Grad-CAM (Gradient-weighted Class Activation Mapping) entirely from scratch. The task explicitly forbids using libraries like \inlinecode{pytorch-gradcam}, so I had to build the full pipeline myself --- hooks, gradient capture, heatmap computation, overlay visualization, everything.
+
+        Here's what I got done:
+
+        \begin{itemize}
+            \item \textbf{Studied Grad-CAM via a Learning Project:} I'd previously worked through a Grad-CAM tutorial (\inlinecode{DL\_with\_PyTorch\_GradCAM.ipynb}) that implemented it for a vegetable classifier (cucumber/eggplant/mushroom) using AlexNet. The core math was reusable, but the implementation was tightly coupled to that model's class structure --- it used \inlinecode{model.get\_activations\_gradient()} and \inlinecode{model.get\_activations()}, methods that my \inlinecode{SimpleGAPCNN} doesn't have.
+
+            \item \textbf{Rewrote Grad-CAM Using External Hooks:} Instead of modifying \inlinecode{SimpleGAPCNN}'s class definition (which would've been invasive and fragile), I used PyTorch's \inlinecode{register\_forward\_hook()} and \inlinecode{register\_full\_backward\_hook()} to capture activations and gradients from the outside. This is cleaner --- you just point it at any layer and it works.
+
+            \item \textbf{Fixed a Nasty Computation Graph Bug:} My first attempt crashed with a \inlinecode{KeyError: 'value'} because the backward hook never fired. Took me a while to figure out why --- turned out I was running two separate forward passes (one in a wrapper function, one inside \inlinecode{get\_gradcam}), so the \inlinecode{backward()} call was operating on a stale computation graph. The hooks from the \textit{new} forward pass existed, but the gradient flow was going through the \textit{old} graph. Classic PyTorch gotcha.
+
+            \item \textbf{Built the Visualization Pipeline:} Wrote \inlinecode{plot\_gradcam()} to show three panels side-by-side: the original image, a prediction probability bar chart, and the Grad-CAM heatmap overlaid on the image. Used PIL for heatmap resizing (no cv2 dependency needed) and the \inlinecode{jet} colormap for the overlay.
+
+            \item \textbf{The ``Aha!'' Moment --- Red 0 vs Green 0:} Finally ran Grad-CAM on biased and conflicting images. The results are exactly what I hoped for: the heatmap lights up the \textit{background}, not the digit shape. The model is staring at the colored pixels and completely ignoring the zero.
+
+            \item \textbf{Ran a Full Comparison Grid:} Tested 6 cases --- matching and conflicting colors for digits 0, 1, and 2. Every single heatmap smears across the background. Not once does the model's attention focus on the digit stroke.
+        \end{itemize}
+
+        \begin{note}
+            \textbf{Key Result:} When fed a Green 0 (conflicting --- Green is digit 1's training color), the model predicted class \textbf{4}, not 0 or 1. At first this surprised me, but it makes sense: Green (0, 255, 0) and Cyan (0, 255, 255) share a dominant green channel. With the noise texture on top, the model confuses them. This is actually a richer finding than a simple ``Green $\rightarrow$ 1'' mapping --- it shows the model's color ``understanding'' is approximate, based on channel statistics rather than precise hue matching.
+        \end{note}
+
+    \subsection{Key Decisions \& Reasoning}
+
+        \begin{tauenv}[frametitle=Decision: External Hooks Instead of Model Modification]
+            \textbf{What I chose:} Use \inlinecode{register\_forward\_hook()} and \inlinecode{register\_full\_backward\_hook()} on the target layer, rather than adding \inlinecode{get\_activations\_gradient()} and \inlinecode{get\_activations()} methods to \inlinecode{SimpleGAPCNN}.
+
+            \textbf{Why:} The learning notebook I studied baked the hooks directly into the model class. That works, but it means every model you want to analyze needs to be modified. External hooks are non-invasive --- you can point \inlinecode{get\_gradcam()} at \textit{any} model and \textit{any} layer without touching the class definition. This is especially useful since I have multiple architectures (\inlinecode{SimpleCNN}, \inlinecode{LazyCNN}, \inlinecode{ResNet18}, etc.) and don't want to modify all of them.
+
+            \textbf{Trade-off:} Slightly trickier to get the computation graph right (as I painfully discovered), but much more flexible.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Decision: Target Layer = model.conv3 (Final Conv Layer)}]
+            \textbf{What I chose:} Hook into the last convolutional layer (\inlinecode{model.conv3}) of \inlinecode{SimpleGAPCNN}.
+
+            \textbf{Why:} This is standard practice for Grad-CAM \cite{gradcam}. The final conv layer has the richest semantic information --- it's seen the full receptive field and contains the highest-level features the model uses for classification. Earlier layers (conv1, conv2) capture lower-level features that are harder to interpret spatially.
+
+            \textbf{For SimpleGAPCNN specifically:} After conv3, there's just GAP $\rightarrow$ FC. The conv3 feature maps are 3$\times$3 (after three rounds of MaxPool from 28$\times$28), so the heatmaps are quite coarse. But that's fine --- at this resolution, ``smeared across the image'' vs ``focused on digit shape'' is still clearly distinguishable after upsampling.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Decision: Single Forward Pass Inside get\_gradcam}]
+            \textbf{What I chose:} Have \inlinecode{get\_gradcam()} handle the forward pass, score extraction, \textit{and} backward pass internally. The caller just passes the model, image tensor, target class (an integer), and target layer.
+
+            \textbf{Why:} My first implementation had the caller do a forward pass, extract the target score, and pass that score into \inlinecode{get\_gradcam()} --- which then ran \textit{another} forward pass. The \inlinecode{backward()} call operated on the first graph, but the hooks were attached to the second graph. Neither graph had both hooks and gradients, so \inlinecode{gradients['value']} was never populated. By keeping everything in one function, there's exactly one computation graph, and the hooks and backward pass operate on the same graph. Problem solved.
+        \end{tauenv}
+
+    \subsection{The Grad-CAM Implementation}
+
+        The math behind Grad-CAM is straightforward once you understand the four steps:
+
+        \begin{enumerate}
+            \item \textbf{Capture activations $A^k$}: Register a forward hook on the target conv layer to store its output during the forward pass.
+
+            \item \textbf{Capture gradients $\frac{\partial y^c}{\partial A^k}$}: Register a backward hook on the same layer to store the gradients flowing back during \inlinecode{backward()}.
+
+            \item \textbf{Compute importance weights $\alpha_k$}: Global Average Pool the gradients across spatial dimensions:
+            $$\alpha_k = \frac{1}{Z} \sum_i \sum_j \frac{\partial y^c}{\partial A^k_{ij}}$$
+
+            \item \textbf{Weighted combination + ReLU}:
+            $$L_{\text{Grad-CAM}} = \text{ReLU}\left(\sum_k \alpha_k \cdot A^k\right)$$
+        \end{enumerate}
+
+        The ReLU is important --- we only want regions that have a \textit{positive} influence on the target class. Negative activations correspond to regions that belong to other classes.
+
+        \begin{code}
+            \begin{lstlisting}[language=python]
+def get_gradcam(model, input_image, target_class, target_layer):
+    activations, gradients = {}, {}
+
+    def forward_hook(module, input, output):
+        activations['value'] = output
+    def backward_hook(module, grad_input, grad_output):
+        gradients['value'] = grad_output[0]
+
+    fwd_handle = target_layer.register_forward_hook(forward_hook)
+    bwd_handle = target_layer.register_full_backward_hook(backward_hook)
+
+    output = model(input_image)
+    target_score = output[0, target_class]
+    model.zero_grad()
+    target_score.backward(retain_graph=True)
+
+    fwd_handle.remove()
+    bwd_handle.remove()
+
+    # Step 1: Importance weights via GAP of gradients
+    pooled_gradients = torch.mean(
+        gradients['value'], dim=[0, 2, 3])
+    # Step 2: Weight activations
+    act = activations['value'].detach()
+    for i in range(act.shape[1]):
+        act[:, i, :, :] *= pooled_gradients[i]
+    # Step 3: Sum + ReLU + normalize
+    heatmap = torch.mean(act, dim=1).squeeze().cpu()
+    heatmap = F.relu(heatmap)
+    if heatmap.max() > 0:
+        heatmap /= heatmap.max()
+
+    return heatmap.numpy(), output
+            \end{lstlisting}
+            \caption{Grad-CAM implementation from scratch using external hooks}
+            \label{lst:gradcam}
+        \end{code}
+
+    \subsection{Experiments \& Results}
+
+        \subsubsection{Experiment 1: Biased Image --- Red 0 (Matching Color)}
+
+        \textbf{Setup:} Constructed a digit ``0'' with a Red textured background (Red = digit 0's training color). This is a ``biased'' image --- the color matches what the model saw during training.
+
+        \textbf{Hypothesis:} The model should predict 0 (correct), and the Grad-CAM heatmap should light up the \textit{background} (where the color is) rather than the \textit{digit stroke} (where the shape is).
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Model prediction: \textbf{0} (correct)
+            \item Heatmap: Smears \textbf{uniformly across the red background pixels}. The white digit stroke is essentially invisible to the model's attention. The model is ``reading the wallpaper,'' not the writing.
+        \end{itemize}
+
+        \begin{note}
+            \textbf{This is the smoking gun.} If the model had learned shapes, the heatmap would highlight the circular outline of the zero. Instead, it highlights everything \textit{except} the zero. The model knows this image is class 0 because the background is red, full stop.
+        \end{note}
+
+        \subsubsection{Experiment 2: Conflicting Image --- Green 0 (Wrong Color)}
+
+        \textbf{Setup:} Same digit ``0'' shape, but with a Green textured background (Green = digit 1's training color). This forces a conflict between shape (0) and color (Green $\rightarrow$ 1).
+
+        \textbf{Hypothesis:} If the model relies on color, it should predict 1 (wrong) and the heatmap should still focus on the background.
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Model prediction: \textbf{4} (wrong, and not even 1!)
+            \item True label: 0
+            \item Heatmap: Still smeared across the \textbf{green background}. Zero attention on the digit shape.
+        \end{itemize}
+
+        \begin{note}
+            \textbf{The prediction of 4 was unexpected but revealing.} I expected it to predict 1 (since Green = digit 1's color), but it predicted 4 instead. Looking at the color map: Green is (0, 255, 0) and Cyan (digit 4's color) is (0, 255, 255). Both have a dominant green channel. With the noise texture varying pixel intensities, some background pixels end up looking more cyan-ish than pure green. The model's ``color understanding'' isn't precise RGB matching --- it's a learned approximation based on channel statistics across the image. So Green and Cyan get conflated.
+
+            This is actually more interesting than a clean ``Green $\rightarrow$ 1'' mapping. It shows the model hasn't memorized exact RGB values --- it's learned \textit{approximate} color clusters, and similar colors get confused. This is realistic behavior for a CNN operating on noisy, textured backgrounds.
+        \end{note}
+
+        \subsubsection{Experiment 3: Side-by-Side Comparison Grid}
+
+        \textbf{Setup:} Ran Grad-CAM on 6 images --- matching vs conflicting colors for digits 0, 1, and 2.
+
+        \begin{table}[H]
+            \caption{Grad-CAM Predictions: Matching vs Conflicting Colors}
+            \label{tab:day7_gradcam}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Image} & \textbf{True Label} & \textbf{Predicted} & \textbf{Heatmap Focus} \\
+            \midrule
+            Red 0 (matching) & 0 & 0 & Background \\
+            Green 0 (conflict) & 0 & 4 & Background \\
+            Green 1 (matching) & 1 & 1 & Background \\
+            Red 1 (conflict) & 1 & 0 & Background \\
+            Blue 2 (matching) & 2 & 2 & Background \\
+            Yellow 2 (conflict) & 2 & 3 & Background \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{In every case, the heatmap focuses on the colored background, never the digit shape. Matching colors produce correct predictions; conflicting colors produce predictions that follow the color, not the shape. Yellow 2 $\rightarrow$ 3 because Yellow is digit 3's training color.}
+        \end{table}
+
+        \begin{note}
+            \textbf{Pattern in the conflicting predictions:} Red 1 $\rightarrow$ 0 (Red is 0's color), Yellow 2 $\rightarrow$ 3 (Yellow is 3's color). The model consistently predicts the digit whose training color matches the background, regardless of the actual digit shape. The one exception is Green 0 $\rightarrow$ 4 instead of 1, which I attribute to Green/Cyan confusion as discussed above.
+
+            \textbf{The heatmap column is the real proof:} All six heatmaps focus on the background. Not a single one highlights the digit stroke. This isn't a statistical argument (``accuracy dropped'') --- it's a \textit{visual, per-image proof} that the model has learned a color$\rightarrow$class mapping and nothing else.
+        \end{note}
+
+    \subsection{Challenges \& Blockers}
+
+        \begin{tauenv}[frametitle={Bug: KeyError on gradients --- The Dual Forward Pass Problem}]
+            \textbf{Problem:} My first implementation crashed with \inlinecode{KeyError: 'value'} when trying to access \inlinecode{gradients['value']}. The backward hook simply never fired.
+
+            \textbf{Root cause:} I had a wrapper function (\inlinecode{run\_gradcam}) that did a forward pass to get the target score, then passed that score to \inlinecode{get\_gradcam}, which did \textit{another} forward pass with hooks attached. But \inlinecode{backward()} was called on the score from the \textit{first} forward pass, which had no hooks. The second forward pass's hooks captured activations fine, but gradients never flowed through them because \inlinecode{backward()} was operating on a completely different computation graph.
+
+            \textbf{Fix:} Consolidated everything into \inlinecode{get\_gradcam()} --- it takes \inlinecode{target\_class} as an integer, does the forward pass internally, extracts the score, and calls \inlinecode{backward()} all within a single computation graph. One graph, one set of hooks, one backward pass. No more orphaned gradients.
+
+            \textbf{Lesson:} PyTorch's computation graph is ephemeral. Each forward pass creates a new graph. If you register hooks and then run backward on a different graph, the hooks attached to the new graph never see any gradients. Always make sure your hooks, forward pass, and backward pass all share the same graph.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Issue: Porting Grad-CAM from Learning Notebook}]
+            \textbf{Problem:} My learning notebook's Grad-CAM implementation called \inlinecode{model.get\_activations\_gradient()} and \inlinecode{model.get\_activations()} --- methods that were part of the AlexNet-based model class. My \inlinecode{SimpleGAPCNN} doesn't have these methods.
+
+            \textbf{Why it's a bad pattern:} Baking hook logic into the model class means you have to modify every new model you want to analyze. It also violates separation of concerns --- the model shouldn't need to know about interpretability tools.
+
+            \textbf{Fix:} Replaced model-internal hooks with external hooks. The \inlinecode{get\_gradcam()} function is now model-agnostic --- it works with any \inlinecode{nn.Module} and any target layer.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Issue: plot\_heatmap Had Multiple Bugs}]
+            \textbf{Problems:}
+            \begin{itemize}
+                \item \inlinecode{ncols=10} but only unpacking into 3 axes $\rightarrow$ \inlinecode{ValueError}
+                \item \inlinecode{set\_yticks(class\_names)} passing strings where numeric positions were expected
+                \item \inlinecode{cv2.resize()} called but cv2 wasn't imported, and the result was never returned (dead code)
+            \end{itemize}
+
+            \textbf{Fix:} Rewrote as \inlinecode{plot\_gradcam()} with \inlinecode{ncols=3}, proper \inlinecode{set\_yticks(range(10))} / \inlinecode{set\_yticklabels(class\_names)}, and PIL-based heatmap resizing instead of cv2.
+        \end{tauenv}
+
+    \subsection{What I Learned Today}
+
+        \begin{itemize}
+            \item \textbf{Grad-CAM is surprisingly simple once you get the hooks right:} The core math is just GAP on gradients, weight the activations, sum, ReLU. The hard part is PyTorch's computation graph management.
+
+            \item \textbf{External hooks $>$ model-internal hooks:} For interpretability tools, keep the model clean and attach hooks from outside. It's more flexible and reusable.
+
+            \item \textbf{The 3$\times$3 heatmap is coarse but sufficient:} After three MaxPool layers, the conv3 feature maps are 3$\times$3. Upsampled to 28$\times$28, each ``pixel'' in the heatmap covers a 9$\times$9 region. But for our purposes --- ``does it focus on the background or the digit?'' --- this resolution is plenty.
+
+            \item \textbf{Color confusion is real:} The model doesn't do precise hue matching. Green and Cyan get confused because they share a dominant green channel. This is a consequence of learning from noisy textured backgrounds rather than clean solid colors.
+
+            \item \textbf{Grad-CAM is the definitive proof:} Accuracy numbers tell you the model is cheating. Confusion matrices tell you \textit{how} it's cheating. But Grad-CAM shows you exactly \textit{where the model is looking}, pixel by pixel. There's no ambiguity left.
+        \end{itemize}
+
+    \subsection{Tomorrow's Plan}
+
+        Task 3 (Grad-CAM) is done. Next up:
+
+        \begin{enumerate}
+            \item \textbf{Task 4 --- The Cure:} Design interventions to fix the color bias. Ideas: grayscale augmentation during training, color jittering, adversarial debiasing, or simply training for more epochs (since I know 2 epochs already bumps hard accuracy to 28\%).
+
+            \item \textbf{Polish the Notebook:} Make sure the Grad-CAM cells have clear markdown explanations between them. The notebook should tell a story: here's the biased model $\rightarrow$ here's what it's looking at $\rightarrow$ here's proof it only sees color.
+
+            \item \textbf{Write Up Findings:} Document the Green $\rightarrow$ 4 confusion and other edge cases. These aren't bugs --- they're features of how the model approximates color perception.
+        \end{enumerate}
+
+%----------------------------------------------------------
+
+\section{Day 8: 4 February, 2026 - Cleaning Up Grad-CAM \& Documenting Observations}
+
+    \subsection{What I Did Today}
+
+        \taustart{T}oday was a lighter day --- mostly polishing and documentation rather than new experiments. After yesterday's Grad-CAM marathon, I had working code and results, but the implementation was messy and the notebook was missing key observations. Spent the day making everything cleaner and more readable.
+
+        Here's what I got done:
+
+        \begin{itemize}
+            \item \textbf{Refactored \inlinecode{get\_gradcam()} with Paper-Matching Variable Names:} The function worked fine, but the variable names were generic (\inlinecode{activations}, \inlinecode{gradients}, \inlinecode{pooled\_gradients}, etc.). I renamed everything to match the Grad-CAM paper's notation --- \inlinecode{A\_k} for feature maps, \inlinecode{alpha\_k} for importance weights, \inlinecode{L\_gradcam} for the final heatmap. Makes the code read almost like the equations from the paper, which is nice for anyone reviewing the notebook.
+
+            \item \textbf{Documented the Grad-CAM Observations:} Yesterday I ran the experiments but left the markdown cells with open-ended ``Key questions'' and no answers. Today I went back through each Grad-CAM output image and wrote up what I actually observed:
+            \begin{itemize}
+                \item \textbf{Red 0 (matching):} The heatmap smears broadly across the red background pixels, not the digit's contour. The model predicts 0 with near-100\% confidence purely from the background color.
+                \item \textbf{Green 0 (conflicting):} The model ignores the shape entirely and predicts a wrong class (3 or 4), with confidence spread across multiple classes rather than a single dominant prediction. The heatmap highlights the green background region, not the zero's shape.
+            \end{itemize}
+
+            \item \textbf{Verified All Six Side-by-Side Cases:} Re-examined the matching vs conflicting comparison grid for digits 0, 1, and 2. In every single case --- all six images --- the heatmap focuses on the background color. Not once does the model's attention fall on the digit stroke. This is consistent and conclusive.
+        \end{itemize}
+
+        \begin{note}
+            \textbf{Why the variable renaming matters:} The Grad-CAM paper defines specific symbols ($A^k$ for activations, $\alpha_k$ for importance weights, $L_{\text{Grad-CAM}}$ for the heatmap). Having code that mirrors these symbols means anyone reading the notebook alongside the paper can map between the two instantly. It's a small change but it makes the implementation self-documenting.
+        \end{note}
+
+    \subsection{Key Decisions \& Reasoning}
+
+        \begin{tauenv}[frametitle=Decision: Rename Variables to Match Grad-CAM Paper Notation]
+            \textbf{What I chose:} Systematic renaming of all variables in \inlinecode{get\_gradcam()} to use mathematical notation from the original paper \cite{gradcam}.
+
+            \textbf{Why:} The old names were fine for getting the code working, but they obscured the connection to the underlying math. When I write up the report or someone reviews the notebook, they shouldn't have to mentally translate ``\inlinecode{pooled\_gradients}'' back to ``$\alpha_k = \frac{1}{Z} \sum_i \sum_j \frac{\partial y^c}{\partial A^k_{ij}}$''. The new names make this mapping explicit.
+
+            \textbf{The full mapping:}
+
+            \begin{table}[H]
+                \caption{Variable Renaming: Code $\leftrightarrow$ Grad-CAM Paper Notation}
+                \label{tab:day8_rename}
+                \begin{tabular}{lll}
+                \toprule
+                \textbf{Old Name} & \textbf{New Name} & \textbf{Meaning} \\
+                \midrule
+                \inlinecode{activations} & \inlinecode{A\_k} & Feature map activations \\
+                \inlinecode{gradients} & \inlinecode{dY\_dA} & Gradients $\partial y^c / \partial A^k$ \\
+                \inlinecode{target\_score} & \inlinecode{y\_c} & Target class score \\
+                \inlinecode{pooled\_gradients} & \inlinecode{alpha\_k} & Importance weights via GAP of gradients \\
+                \inlinecode{act} & \inlinecode{A\_k\_weighted} & Feature maps weighted by $\alpha_k$ \\
+                \inlinecode{heatmap} & \inlinecode{L\_gradcam} & Final Grad-CAM heatmap \\
+                loop var \inlinecode{i} & \inlinecode{k} & Channel index (matching the $k$ in $A^k$) \\
+                \bottomrule
+                \end{tabular}
+                \tabletext{Every variable now corresponds directly to a symbol in the Grad-CAM equations, making the code self-documenting.}
+            \end{table}
+        \end{tauenv}
+
+    \subsection{Observations from Grad-CAM Outputs}
+
+        After running the Grad-CAM experiments yesterday, I took time today to carefully examine the output images and document what I saw. Here are the key findings:
+
+        \subsubsection{Red 0 (Matching Color --- Biased Image)}
+
+        The model predicts class 0 with near-100\% confidence. The Grad-CAM heatmap smears broadly across the red background region rather than concentrating on the digit's shape. The circular contour of the zero is essentially invisible to the model's attention --- it's ``reading the wallpaper,'' not the writing. This confirms the model bases its decision on background color, not digit morphology.
+
+        \subsubsection{Green 0 (Conflicting Color)}
+
+        The model ignores the zero's shape entirely. It does \textit{not} predict 0. Instead, it predicts a color-associated class (3 or 4 depending on the run), with confidence spread across multiple classes rather than a single dominant prediction. The Grad-CAM heatmap highlights the background color region, confirming the model attends to the green pixels rather than the digit's contour.
+
+        The uncertain, distributed probability bar is telling --- when the color cue conflicts with the shape, the model has \textit{no reliable shape features to fall back on}. It's not just ``wrong'' --- it's confused, because its only source of information (color) is pointing in an ambiguous direction (Green and Cyan are similar in channel statistics).
+
+        \subsubsection{Full Comparison Grid}
+
+        Across all six test cases (matching and conflicting colors for digits 0, 1, 2):
+
+        \begin{itemize}
+            \item \textbf{Matching color $\rightarrow$ correct prediction, high confidence.} Heatmap on background.
+            \item \textbf{Conflicting color $\rightarrow$ wrong prediction, lower confidence.} Heatmap still on background.
+            \item \textbf{Not a single heatmap focuses on the digit stroke.} Zero evidence of shape-based reasoning.
+        \end{itemize}
+
+        The consistent pattern across all cases is the strongest evidence yet: Grad-CAM isn't just showing a statistical tendency --- it's showing that the model \textit{categorically} does not attend to digit shapes.
+
+    \subsection{What I Learned Today}
+
+        \begin{itemize}
+            \item \textbf{Code readability matters for research:} Renaming variables to match paper notation is a small effort but makes a huge difference when connecting implementation to theory. If I come back to this notebook in a month, I'll immediately understand what each variable represents.
+
+            \item \textbf{Writing observations forces clarity:} Leaving ``Key questions'' as open-ended placeholders was lazy. Actually sitting down and describing what each heatmap shows made me notice subtleties I'd missed --- like the fact that conflicting images have \textit{distributed} confidence (not just wrong but uncertain), which tells a richer story about the model's internal state.
+
+            \item \textbf{The Green $\rightarrow$ 3/4 confusion is a feature, not a bug:} The model doesn't do precise RGB matching. It learned approximate color clusters from noisy textured backgrounds. Similar colors (Green and Cyan) get conflated. This is realistic CNN behavior and actually makes the analysis more interesting than a clean 1-to-1 color mapping.
+        \end{itemize}
+
+    \subsection{Tomorrow's Plan}
+
+        With Tasks 0--3 complete and documented, the remaining work is:
+
+        \begin{enumerate}
+            \item \textbf{Task 4 --- The Cure:} Design and implement interventions to fix the color bias. Training longer is the obvious first try (2 epochs already bumps hard accuracy to 28\%), but I also want to explore grayscale augmentation and color jittering as more principled debiasing strategies.
+
+            \item \textbf{Final Notebook Polish:} Make sure the full notebook tells a coherent story from dataset creation through bias demonstration, interpretability analysis, and (eventually) the fix.
+        \end{enumerate}
+
+%----------------------------------------------------------
+
+\section{Day 9: 6 February, 2026 - Task 4: Teaching the Model to Ignore Color}
+
+    \subsection{What I Did Today}
+
+        \taustart{T}oday was the big one --- Task 4. The goal: retrain the model to focus on digit \textit{shape} instead of background color, \textbf{without} converting to grayscale and \textbf{without} changing the dataset. The 95\% color bias is still there; the model just has to learn to ignore it.
+
+        I implemented four different debiasing methods, each attacking the problem from a different angle. I also took a quick detour to validate my Grad-CAM implementation against the \inlinecode{pytorch-gradcam} library.
+
+        Here's the full breakdown:
+
+        \begin{itemize}
+            \item \textbf{GradCAM Library Verification:} Before diving into Task 4, I wanted to confirm my scratch Grad-CAM implementation (from Day 7) actually produces correct heatmaps. Installed \inlinecode{pytorch-grad-cam} and ran the same 6 test cases (matching/conflicting colors for digits 0, 1, 2) through both implementations side-by-side. Three columns per test case: original image, library heatmap, my scratch heatmap. They match almost perfectly --- both focus on the background, both miss the digit entirely. Good to know my from-scratch code is correct.
+
+            \item \textbf{Method 1 --- Random Channel Permutation + Color Jitter:} Wrap the training data in a \inlinecode{ColorInvariantDataset} that randomly shuffles RGB channels (\inlinecode{torch.randperm(3)}) and applies aggressive color jitter (\inlinecode{hue=0.5}) on each sample. The color-digit correlation is destroyed at the input level --- ``red'' might become ``blue'' or ``green'' from the model's perspective, while shape is perfectly preserved.
+
+            \item \textbf{Method 2 --- Saliency-Guided Foreground Focus Loss:} Feed the original biased images unchanged, but add a penalty term that minimizes gradient magnitude on background pixels. Uses \inlinecode{torch.autograd.grad(create\_graph=True)} for second-order gradients. The saliency penalty forces the model to derive predictions from the white digit foreground, not the colored background.
+
+            \item \textbf{Method 3 --- Adversarial Color Debiasing (Gradient Reversal):} Split the CNN into a shared feature extractor + digit classifier head + color adversary head. A Gradient Reversal Layer (GRL) between features and the color adversary negates gradients during backprop, forcing the feature extractor to produce color-blind representations. Uses a progressive alpha schedule (DANN-style).
+
+            \item \textbf{Method 4 --- Color Prediction Penalty:} Same principle as Method 3, but simpler: instead of a GRL, directly subtract the color prediction loss from the objective. Two-step optimization per batch --- Step 1 trains the color predictor, Step 2 trains the backbone with \inlinecode{loss\_digit - $\lambda$ * loss\_color}. Two separate optimizers are needed so the color predictor stays well-calibrated while the features work against it.
+        \end{itemize}
+
+        \begin{note}
+            \textbf{The ``Spirit of the Rules'' Issue:} After implementing Method 1, I realized there's a tension with the task requirements. The assignment says ``without changing the dataset,'' and technically Method 1 doesn't modify the stored images. But the aggressive color augmentation effectively \textit{removes} the bias from the model's perspective during training. The model never sees the consistent color-digit mapping. That circumvents the spirit of the constraint --- the model should still \textit{see} the biased colors and learn to ignore them through a smarter training strategy.
+
+            The assignment's suggested approaches (``color penalty,'' ``saliency guides'') point toward modifying the \textit{loss function / gradient flow}, not the inputs. So I kept Method 1 as a baseline comparison, but added Methods 2--4 which feed the original biased images unchanged and only modify the training objective.
+        \end{note}
+
+    \subsection{Key Decisions \& Reasoning}
+
+        \begin{tauenv}[frametitle=Decision: Implement 4 Methods Instead of the Required 2]
+            \textbf{What I chose:} Implement four debiasing strategies covering three fundamentally different approaches: input augmentation (Method 1), loss function modification (Method 2), and adversarial feature debiasing (Methods 3 \& 4).
+
+            \textbf{Why:} The task requires ``at least 2 methods.'' But the different approaches illuminate different aspects of the bias problem:
+            \begin{itemize}
+                \item Method 1 shows that destroying color correlation at input level works trivially
+                \item Method 2 shows that directing attention via gradient penalties is effective
+                \item Methods 3 \& 4 tackle the harder question: can you remove color info from learned features directly?
+            \end{itemize}
+
+            Having 4 methods also lets me compare strategies that modify inputs vs modify losses vs modify gradient flow.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle=Decision: Same SimpleGAPCNN Architecture for All Methods]
+            \textbf{What I chose:} Use the same \inlinecode{SimpleGAPCNN} backbone (3 conv layers, MaxPool, GAP, FC) for all four methods. Methods 3 and 4 add auxiliary color prediction heads but keep the same convolutional backbone.
+
+            \textbf{Why:} Fair comparison. If I changed the architecture between methods, I couldn't attribute performance differences to the training strategy alone. Same model, different training --- that's the cleanest experiment.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Decision: detect\_color\_labels() Uses Pixel-Level Color Detection}]
+            \textbf{What I chose:} For Methods 3 and 4, I need actual background color labels (not digit labels). I wrote \inlinecode{detect\_color\_labels()} that computes the average background pixel color per image and matches it to the closest entry in \inlinecode{color\_digit\_map} via L2 distance.
+
+            \textbf{Why:} Using digit labels as color proxies would be wrong. Since color $\approx$ digit 95\% of the time, the GRL would end up penalizing shape features too (shape predicts digits, and digit $\approx$ color). With actual pixel-detected color labels, the adversary specifically learns to detect \textit{color}, and the GRL specifically removes \textit{color} information from features. This distinction is critical.
+        \end{tauenv}
+
+    \subsection{Experiments \& Results}
+
+        \subsubsection{GradCAM Library Verification}
+
+        Before starting Task 4, I ran a quick sanity check on my scratch Grad-CAM implementation (Task 3). Using the \inlinecode{pytorch-grad-cam} library with \inlinecode{model.conv3} as the target layer, I ran the same 6 test cases and displayed three columns per image: original, library heatmap overlay, and my scratch heatmap overlay.
+
+        \textbf{Result:} The heatmaps are visually identical. Both implementations highlight the colored background region and ignore the digit shape. My from-scratch Grad-CAM is correct. This also validates the math I documented in Day 7 --- the GAP-on-gradients approach produces the same results as the reference library.
+
+        \subsubsection{Method 1: Channel Permutation + Color Jitter}
+
+        \textbf{Setup:}
+        \begin{itemize}
+            \item \inlinecode{ColorInvariantDataset} wrapper applies augmentation on-the-fly
+            \item Channel permutation: \inlinecode{torch.randperm(3)} reorders RGB channels randomly
+            \item Color jitter: \inlinecode{brightness=0.3, contrast=0.3, saturation=0.5, hue=0.5}
+            \item Augmentation applied only during training; val/test see original images
+            \item 5 epochs, Adam (lr=0.001)
+        \end{itemize}
+
+        \textbf{Hypothesis:} If color information is randomly scrambled at each training step, the model has no consistent color-digit mapping to exploit. Shape is preserved through all color transforms, so it must learn shape.
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Easy Val Accuracy: $\sim$95\%
+            \item Hard Test Accuracy: $>$90\%
+        \end{itemize}
+
+        \begin{note}
+            \textbf{It works --- almost too well.} The model achieves excellent accuracy on both easy and hard sets. But as I noted above, this approach effectively destroys the bias at the input level, which arguably violates the spirit of ``without changing the dataset.'' The model never sees the 95\% correlation, so it's not really ``ignoring'' the bias --- the bias simply isn't there from its perspective.
+        \end{note}
+
+        \subsubsection{Method 2: Saliency-Guided Foreground Focus Loss}
+
+        \textbf{Setup:}
+        \begin{itemize}
+            \item Original biased images fed unchanged (no augmentation)
+            \item Loss: \inlinecode{total\_loss = loss\_ce + 0.5 * bg\_saliency}
+            \item Background mask: pixels where $\min(R,G,B) < 0.95$ (not white)
+            \item Second-order gradients via \inlinecode{create\_graph=True}
+            \item 10 epochs, Adam (lr=0.001)
+        \end{itemize}
+
+        \textbf{Hypothesis:} The Grad-CAM analysis from Task 3 proved the model looks at background color. If I directly penalize gradient magnitude on background pixels, the model is forced to look at the white digit foreground for its predictions.
+
+        \textbf{Results:}
+        \begin{itemize}
+            \item Easy Val Accuracy: $>$95\%
+            \item Hard Test Accuracy: $>$90\%
+        \end{itemize}
+
+        \begin{note}
+            \textbf{This is the ``honest'' debiasing method.} The model sees the exact same biased images. The only change is the loss function --- a penalty for attending to background pixels. The saliency penalty successfully redirects the model's attention from the colored background to the white digit shape. Training is slower than Method 1 (second-order gradients are expensive), but the results are strong and the approach is fully compliant with the task constraints.
+
+            I also added a saliency visualization cell comparing baseline (Task 1) saliency maps against Method 2 saliency maps on matching and conflicting color-digit pairs. The difference is stark --- baseline saliency smears across the background, Method 2 saliency concentrates on the digit stroke.
+        \end{note}
+
+        \subsubsection{Methods 3 \& 4: The Initial Failure}
+
+        \textbf{Method 3 (Gradient Reversal):} 15 epochs with DANN sigmoid alpha schedule (0$\rightarrow$1), single Adam optimizer for all parameters (lr=0.001), 2-layer color adversary MLP (128$\rightarrow$64$\rightarrow$10).
+
+        \textbf{Method 4 (Color Penalty):} 15 epochs, two-step optimization, $\lambda = 0.5$ fixed from epoch 0, 2-layer color head, one color update per main step.
+
+        \begin{table}[H]
+            \caption{Task 4: Initial Results --- All Four Methods}
+            \label{tab:day9_initial}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Method} & \textbf{Easy Val} & \textbf{Hard Test} & \textbf{Target ($>$70\%)?} \\
+            \midrule
+            M1: Channel Perm + Jitter & $\sim$95\% & $>$90\% & \textcolor{green!60!black}{$\checkmark$} \\
+            M2: Saliency Focus Loss & $>$95\% & $>$90\% & \textcolor{green!60!black}{$\checkmark$} \\
+            M3: Gradient Reversal (GRL) & $\sim$98\% & \textbf{7\%} & \textcolor{red!60!black}{$\times$} \\
+            M4: Color Prediction Penalty & $\sim$99\% & \textbf{11\%} & \textcolor{red!60!black}{$\times$} \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{Methods 1 \& 2 comfortably exceed the target. Methods 3 \& 4 are catastrophically failing --- performing at or below random chance (10\%). The high easy val accuracy with near-zero hard accuracy means the model is still purely reading color.}
+        \end{table}
+
+        \begin{note}
+            \textbf{This is bad.} Methods 3 and 4 are performing \textit{worse} than the untrained baseline (which would give $\sim$10\% by random guessing). The adversarial debiasing completely failed. The features appear to have collapsed --- the model learned nothing useful about either color or shape. Time to figure out why.
+        \end{note}
+
+    \subsection{Challenges \& Blockers}
+
+        \begin{tauenv}[frametitle={Challenge: Adversarial Methods Collapse with 95\% Correlation}]
+            \textbf{The fundamental problem:} With 95\% color-digit correlation, knowing color $\approx$ knowing digit. When the GRL (Method 3) or the negative loss (Method 4) pushes the features to forget color, they also destroy digit-correlated information --- because the two are almost perfectly entangled. The model ends up in a degenerate state where features encode neither color nor shape.
+
+            \textbf{Why Methods 1 \& 2 don't have this problem:}
+            \begin{itemize}
+                \item Method 1 destroys the correlation at the \textit{input} level before features are even formed
+                \item Method 2 uses pixel-level spatial guidance (foreground vs background) rather than feature-level debiasing
+            \end{itemize}
+
+            Methods 3 \& 4 operate at the \textit{feature} level, trying to remove color from already-learned representations. With 95\% correlation, the adversarial pressure can't distinguish ``color features'' from ``digit features'' --- it just destroys everything.
+
+            \textbf{Status:} I'll debug this tomorrow. The approach is theoretically sound (DANN-style adversarial debiasing is well-established), so the issue must be in the training dynamics --- learning rates, adversary strength, gradient flow, or scheduling.
+        \end{tauenv}
+
+    \subsection{What I Learned Today}
+
+        \begin{itemize}
+            \item \textbf{Not all debiasing strategies are equal:} Input-level approaches (Method 1) and loss-level approaches (Method 2) are robust and easy to tune. Feature-level adversarial approaches (Methods 3 \& 4) are theoretically elegant but extremely sensitive to hyperparameters, especially when the spurious correlation is strong.
+
+            \item \textbf{The ``spirit of the rules'' matters:} Method 1 technically doesn't modify the dataset, but it effectively removes the bias from the model's perspective. For a fair evaluation, the model should \textit{see} the biased data and learn to resist it.
+
+            \item \textbf{My Grad-CAM implementation is correct:} The library comparison confirms it. Small win, but it validates a significant chunk of work from Days 7--8.
+
+            \item \textbf{High easy accuracy + low hard accuracy = still cheating:} Methods 3 \& 4 getting 98--99\% on easy but 7--11\% on hard means they're \textit{still purely reading color}, just with degraded feature quality. The adversarial training didn't debias anything; it just made the features noisier.
+        \end{itemize}
+
+    \subsection{Tomorrow's Plan}
+
+        \begin{enumerate}
+            \item \textbf{Debug Methods 3 \& 4:} Root cause analysis. Why did adversarial training collapse? Investigate the training curves --- is the color adversary accuracy dropping (good) or staying high (bad)?
+
+            \item \textbf{Potential fixes to try:}
+            \begin{itemize}
+                \item Separate optimizers for adversary vs feature extractor (different learning rates)
+                \item Stronger adversary (more layers, BatchNorm)
+                \item Multiple adversary updates per main update (like GAN training)
+                \item Gentler adversarial pressure (cap alpha, progressive lambda)
+                \item Gradient clipping for stability
+            \end{itemize}
+
+            \item \textbf{Goal:} Get both Methods 3 \& 4 above 70\% on the hard test set.
+        \end{enumerate}
+
+%----------------------------------------------------------
+
+\section{Day 10: 7 February, 2026 - Debugging the Adversarial Methods}
+
+    \subsection{What I Did Today}
+
+        \taustart{T}oday I went full detective mode on Methods 3 and 4. Both were getting catastrophic accuracy (7\% and 11\%) on the hard test set --- below random guessing. After careful analysis of the training dynamics, I identified the root causes and implemented fixes that brought both methods up to $>$95\% accuracy on the hard set. From 7\% to 96\%. That's a good day.
+
+        Here's the diagnosis and treatment:
+
+        \begin{itemize}
+            \item \textbf{Root Cause Analysis:} The core problem with both methods was the same: with 95\% color-digit correlation, adversarial debiasing needs \textit{very} careful tuning. The adversary must be strong enough to detect residual color information, the adversarial pressure must be gentle enough not to destroy shape features, and the adversary must stay ahead of the feature extractor at all times. The original implementations got none of these right.
+
+            \item \textbf{Method 3 Fixes (Gradient Reversal):}
+            \begin{itemize}
+                \item \textbf{Separate optimizers:} Split the single Adam optimizer into two --- \inlinecode{optimizer\_main} (lr=0.001) for the feature extractor + digit head, and \inlinecode{optimizer\_adv} (lr=0.002) for the color adversary. The adversary needs a higher learning rate to stay ahead.
+                \item \textbf{Stronger adversary:} Replaced the 2-layer MLP (128$\rightarrow$64$\rightarrow$10) with a 3-layer MLP with BatchNorm and Dropout (128$\rightarrow$128$\rightarrow$64$\rightarrow$10). A stronger adversary means even moderate GRL pressure produces meaningful debiasing gradients.
+                \item \textbf{Multiple adversary updates:} 5 adversary update steps per main update (similar to GAN training). This ensures the adversary is well-calibrated before gradient reversal kicks in.
+                \item \textbf{Capped alpha:} Changed the GRL strength schedule from ramping to 1.0 to capping at 0.5. With 95\% correlation, full reversal strength destroys useful features along with color features. Moderate pressure is key.
+                \item \textbf{Alpha = 0 during adversary step:} The adversary should see true gradients (not reversed ones) when it's being trained. Only the main update step uses the GRL.
+                \item \textbf{Gradient clipping:} \inlinecode{clip\_grad\_norm\_ = 1.0} on both optimizer groups prevents training instability.
+            \end{itemize}
+
+            \item \textbf{Method 4 Fixes (Color Penalty):}
+            \begin{itemize}
+                \item \textbf{Progressive lambda schedule:} Instead of a fixed $\lambda = 0.5$ from epoch 0, lambda starts at 0 and ramps linearly to 0.5 over the first half of training. This lets the model learn basic shape features before debiasing pressure kicks in.
+                \item \textbf{Separate optimizers:} Same split as Method 3 --- main (lr=0.001) and color head (lr=0.002).
+                \item \textbf{Stronger color head:} Same 3-layer MLP upgrade as Method 3.
+                \item \textbf{Multiple color head updates:} 5 color head training steps per main step, keeping the adversary well-calibrated.
+                \item \textbf{Gradient clipping:} Same as Method 3.
+            \end{itemize}
+        \end{itemize}
+
+        \begin{note}
+            \textbf{The key insight:} Adversarial debiasing is like training a GAN --- the discriminator (color adversary) must stay ahead of the generator (feature extractor). If the adversary falls behind (too weak, too few updates, too low learning rate), the gradient reversal signal becomes meaningless noise. If the adversarial pressure is too strong (alpha too high, lambda too large too early), the features collapse. It's a balancing act, and with 95\% correlation, the margin for error is razor-thin.
+        \end{note}
+
+    \subsection{Key Decisions \& Reasoning}
+
+        \begin{tauenv}[frametitle={Decision: Cap GRL Strength at $\alpha_{\max} = 0.5$}]
+            \textbf{What I chose:} Limit the maximum GRL alpha to 0.5 instead of the standard DANN schedule's 1.0.
+
+            \textbf{Why:} With 95\% correlation between color and digit, the gradient reversal layer can't distinguish ``color features'' from ``digit features.'' At $\alpha = 1.0$, the reversed color gradients are strong enough to overwhelm the digit classification gradients, causing total feature collapse. At $\alpha = 0.5$, the adversarial pressure is strong enough to reduce color encoding but gentle enough to preserve shape features.
+
+            \textbf{The analogy:} It's like trying to remove a specific frequency from a signal that's 95\% correlated with the signal you want to keep. If you apply a strong notch filter, you destroy both. You need a gentle filter that attenuates the unwanted component without killing the wanted one.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Decision: 5 Adversary Updates Per Main Update}]
+            \textbf{What I chose:} Train the color adversary for 5 steps before each feature extractor update.
+
+            \textbf{Why:} This is borrowed from GAN training best practices. The discriminator (adversary) must be well-trained before its gradient signal is useful. If the adversary is weak (undertrained), the reversed gradients it provides are uninformative --- they tell the feature extractor ``your features don't encode color'' even when they do. With 5 updates, the adversary stays well-calibrated.
+
+            \textbf{Trade-off:} Training is $\sim$5$\times$ slower per epoch (5 extra forward/backward passes per batch). But correctness matters more than speed.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Decision: Progressive $\lambda$ Schedule for Method 4}]
+            \textbf{What I chose:} Start $\lambda = 0$ and ramp linearly to $\lambda_{\max} = 0.5$ over the first half of training, rather than using a fixed $\lambda = 0.5$ from epoch 0.
+
+            \textbf{Why:} With fixed $\lambda = 0.5$, the loss is \inlinecode{loss\_digit - 0.5 * loss\_color} from the very first batch. The model hasn't learned \textit{any} shape features yet, and the color penalty is already pushing it to forget color. It has nothing to fall back on, so features collapse to noise. With the progressive schedule, the model spends the first few epochs learning basic features (including color, which is fine temporarily), and then the penalty gradually steers features away from color while preserving shape.
+        \end{tauenv}
+
+    \subsection{Experiments \& Results}
+
+        \subsubsection{Method 3: Epoch Sweep After Fixes}
+
+        I tested Method 3 at 5, 10, and 20 epochs to find the sweet spot:
+
+        \begin{table}[H]
+            \caption{Method 3 (Gradient Reversal): Performance vs Training Duration}
+            \label{tab:day10_m3_sweep}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Epochs} & \textbf{Easy Val} & \textbf{Hard Test} & \textbf{Notes} \\
+            \midrule
+            5 & 98.82\% & 86.72\% & Good, still improving \\
+            \textbf{10} & \textbf{99.10\%} & \textbf{95.79\%} & Best balance \\
+            20 & $\sim$99\% & 98.16\% & Slight overfitting \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{10 epochs is the sweet spot. The color loss starts rising after $\sim$5 epochs, indicating the features are becoming color-blind. By 10 epochs, the adversary can barely predict color, and digit accuracy is excellent.}
+        \end{table}
+
+        \begin{note}
+            \textbf{The training curves tell the story:} Watching the color adversary accuracy drop from $\sim$95\% toward random (10\%) over training is deeply satisfying. It's the signature of successful debiasing --- the features are genuinely losing color information, not just getting worse at everything. Digit accuracy stays high throughout, confirming that shape features are being preserved.
+
+            At 20 epochs, the model starts overfitting --- hard test accuracy is 98.16\% which is actually very high, but the training curves suggest diminishing returns. 10 epochs is the practical optimum.
+        \end{note}
+
+        \subsubsection{Method 4: Epoch Sweep After Fixes}
+
+        Same sweep for Method 4:
+
+        \begin{table}[H]
+            \caption{Method 4 (Color Penalty): Performance vs Training Duration}
+            \label{tab:day10_m4_sweep}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Epochs} & \textbf{Easy Val} & \textbf{Hard Test} & \textbf{Notes} \\
+            \midrule
+            5 & 99.23\% & 84.71\% & Good, still improving \\
+            \textbf{10} & \textbf{99.28\%} & \textbf{97.54\%} & Best balance \\
+            20 & 99.20\% & 97.62\% & Slight overfitting \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{Similar pattern to Method 3. 10 epochs is the sweet spot. Method 4 slightly outperforms Method 3 at 10 epochs (97.54\% vs 95.79\%), possibly because the explicit penalty formulation is more stable than the GRL.}
+        \end{table}
+
+        \subsubsection{Before vs After: The Full Picture}
+
+        \begin{table}[H]
+            \caption{Methods 3 \& 4: Before and After Fixes (Hard Test Accuracy)}
+            \label{tab:day10_before_after}
+            \begin{tabular}{lccc}
+            \toprule
+            \textbf{Method} & \textbf{Before Fix} & \textbf{After Fix (10 ep)} & \textbf{Improvement} \\
+            \midrule
+            M3: Gradient Reversal & 7\% & 95.79\% & +88.79 pp \\
+            M4: Color Penalty & 11\% & 97.54\% & +86.54 pp \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{The fixes transformed both methods from catastrophic failure to near-perfect debiasing. All four methods now comfortably exceed the 70\% target.}
+        \end{table}
+
+        \subsubsection{Final Summary: All Four Methods}
+
+        \begin{table}[H]
+            \caption{Task 4: Final Results --- All Four Debiasing Methods}
+            \label{tab:day10_final}
+            \begin{tabular}{lccl}
+            \toprule
+            \textbf{Method} & \textbf{Easy Val} & \textbf{Hard Test} & \textbf{Strategy} \\
+            \midrule
+            M1: Channel Perm + Jitter & $\sim$95\% & $>$90\% & Input augmentation \\
+            M2: Saliency Focus Loss & $>$95\% & $>$90\% & Loss modification \\
+            M3: Gradient Reversal & 99.10\% & 95.79\% & Adversarial (GRL) \\
+            M4: Color Penalty & 99.28\% & 97.54\% & Adversarial (explicit) \\
+            \bottomrule
+            \end{tabular}
+            \tabletext{All four methods exceed the 70\% target by a wide margin. The adversarial methods (3 \& 4) actually achieve the highest hard test accuracy after proper tuning, despite being the hardest to get right initially.}
+        \end{table}
+
+    \subsection{Technical Details: What Each Fix Does}
+
+        For reference, here's a detailed breakdown of the specific changes that fixed Methods 3 and 4:
+
+        \begin{table}[H]
+            \caption{Method 3 Fixes: Problem $\rightarrow$ Solution}
+            \label{tab:day10_m3_fixes}
+            \begin{tabular}{p{3.4cm}p{4.6cm}}
+            \toprule
+            \textbf{Problem} & \textbf{Fix} \\
+            \midrule
+            Single shared optimizer & Separate optimizers: main (lr=0.001) + adversary (lr=0.002) \\
+            Weak 2-layer adversary & 3-layer MLP with BatchNorm \& Dropout \\
+            1 adversary update per main update & 5 adversary updates per main step \\
+            Alpha ramps to 1.0 & Capped at 0.5 with linear ramp \\
+            No gradient clipping & clip\_grad\_norm\_ = 1.0 \\
+            Adversary trained with GRL active & Alpha = 0 during adversary step \\
+            \bottomrule
+            \end{tabular}
+        \end{table}
+
+        \begin{table}[H]
+            \caption{Method 4 Fixes: Problem $\rightarrow$ Solution}
+            \label{tab:day10_m4_fixes}
+            \begin{tabular}{p{3.4cm}p{4.6cm}}
+            \toprule
+            \textbf{Problem} & \textbf{Fix} \\
+            \midrule
+            Fixed $\lambda = 0.5$ from epoch 0 & Progressive $\lambda$: 0 $\rightarrow$ 0.5 over first half \\
+            Single shared optimizer & Separate optimizers: main (lr=0.001) + color (lr=0.002) \\
+            Weak 2-layer color head & 3-layer MLP with BatchNorm \& Dropout \\
+            1 color update per main step & 5 color head updates per main step \\
+            No gradient clipping & clip\_grad\_norm\_ = 1.0 \\
+            \bottomrule
+            \end{tabular}
+        \end{table}
+
+    \subsection{Challenges \& Blockers}
+
+        \begin{tauenv}[frametitle={Challenge: Adversarial Training is Like GAN Training}]
+            \textbf{The problem:} Adversarial debiasing has the same instability issues as GANs --- mode collapse, oscillating losses, sensitivity to learning rates. With 95\% color-digit correlation, the problem is even harder because the ``real'' signal (shape) and the ``spurious'' signal (color) are almost perfectly entangled.
+
+            \textbf{What I tried first:} Increasing epochs from 15 to 20. Didn't help --- more training just meant more time for the features to collapse.
+
+            \textbf{What actually worked:} Treating it like GAN training: multiple discriminator (adversary) updates per generator (feature extractor) update, separate learning rates, and careful strength scheduling. The moment I applied these GAN best practices, both methods started working.
+
+            \textbf{Lesson:} If your architecture has adversarial components, use adversarial training best practices. This isn't a standard classification problem anymore.
+        \end{tauenv}
+
+        \begin{tauenv}[frametitle={Challenge: Finding the Right Alpha/Lambda Cap}]
+            \textbf{The problem:} With the DANN sigmoid schedule ramping alpha to 1.0, the features collapsed. But how low should the cap be?
+
+            \textbf{What I tried:} Alpha cap at 0.3 (too weak, color still dominant), 0.5 (sweet spot), 0.8 (features started degrading). Settled on 0.5 --- strong enough to debias, gentle enough to preserve shape.
+
+            \textbf{For Method 4's lambda:} Similar story. Fixed $\lambda = 0.5$ from epoch 0 killed features. Progressive ramp from 0 to 0.5 worked perfectly. The model needs time to learn shape features before you start penalizing color.
+        \end{tauenv}
+
+    \subsection{What I Learned Today}
+
+        \begin{itemize}
+            \item \textbf{Adversarial debiasing requires GAN-like training discipline:} Separate optimizers, multiple discriminator updates, learning rate asymmetry, and strength scheduling. The naive ``one optimizer, one update'' approach is doomed to fail with strong spurious correlations.
+
+            \item \textbf{The strength of the spurious correlation determines how delicate the tuning must be:} With 95\% correlation, the adversarial pressure must be precisely calibrated. Too much $\rightarrow$ feature collapse. Too little $\rightarrow$ color still encoded. A weaker correlation (say 60\%) would probably work with the original naive implementation.
+
+            \item \textbf{Progressive schedules are essential:} Both methods benefit enormously from starting with zero adversarial pressure and ramping up. The model needs a ``warm start'' on shape features before debiasing begins.
+
+            \item \textbf{The explicit penalty (Method 4) is more stable than GRL (Method 3):} Method 4 achieves 97.54\% vs Method 3's 95.79\% at 10 epochs. The direct subtraction \inlinecode{loss\_digit - $\lambda$ * loss\_color} gives more predictable gradient flow than the implicit sign flip of the GRL. The GRL is more elegant in theory, but the explicit approach is easier to tune in practice.
+
+            \item \textbf{10 epochs is the sweet spot:} Both methods show diminishing returns (and slight overfitting) beyond 10 epochs. The debiasing converges quickly once the training dynamics are correct.
+        \end{itemize}
+
+    \subsection{Code: Key Architecture Changes}
+
+        For reference, here's the upgraded color adversary head used in both Methods 3 and 4 (replacing the original 2-layer MLP):
+
+        \begin{code}
+            \begin{lstlisting}[language=python]
+# Stronger color adversary (3-layer MLP with BatchNorm)
+self.color_head = nn.Sequential(
+    nn.Linear(128, 128),
+    nn.BatchNorm1d(128),
+    nn.ReLU(),
+    nn.Dropout(0.3),
+    nn.Linear(128, 64),
+    nn.BatchNorm1d(64),
+    nn.ReLU(),
+    nn.Linear(64, 10),
+)
+            \end{lstlisting}
+            \caption{Upgraded color adversary head --- 3 layers with BatchNorm and Dropout}
+            \label{lst:color_head}
+        \end{code}
+
+        And the core training loop structure for Method 3 (the adversary step + main step pattern):
+
+        \begin{code}
+            \begin{lstlisting}[language=python]
+# Step 1: Train adversary (5 steps, no GRL)
+for _ in range(n_adv_steps):
+    optimizer_adv.zero_grad()
+    _, color_out = model(images, alpha=0.0)
+    loss_adv = criterion(color_out, color_labels)
+    loss_adv.backward()
+    clip_grad_norm_(adv_params, 1.0)
+    optimizer_adv.step()
+
+# Step 2: Train features + digit head (with GRL)
+optimizer_main.zero_grad()
+digit_out, color_out = model(images, alpha=alpha)
+loss = criterion(digit_out, labels) + criterion(color_out, color_labels)
+loss.backward()
+clip_grad_norm_(feat_params, 1.0)
+optimizer_main.step()
+            \end{lstlisting}
+            \caption{Two-step adversarial training loop for Method 3}
+            \label{lst:m3_training}
+        \end{code}
+
+    \subsection{Next Steps}
+
+        Task 4 is complete. All four methods exceed the 70\% hard test target by a wide margin. The remaining tasks are:
+
+        \begin{enumerate}
+            \item \textbf{Task 5 --- Targeted Adversarial Attacks:} Take the robust model and try to fool it. Optimize a noise perturbation to make a 7 look like a 3 with $>$90\% confidence, under an $\epsilon < 0.05$ constraint. Compare attack difficulty between the color-biased model (Task 1) and the debiased model (Task 4).
+
+            \item \textbf{Task 6 --- Sparse Autoencoders:} Train SAEs on intermediate hidden states to decompose features into interpretable directions. See if color features are present in the decomposition and whether dialing them up/down changes predictions.
+        \end{enumerate}
+
+%----------------------------------------------------------
+
+\section{Figures and Tables}
+
+    \subsection{Figures}
+		
+    	\figref{fig:figure} shows a 3D surface plot of the hyperbolic paraboloid $z=x^2-y^2$.
+    		
+    	\begin{figure}[H]
+    		\centering
+    		\includegraphics[width=0.75\columnwidth]{figures/Example.pdf}
+    		\caption{Hyperbolic paraboloid obtained from PGFPlots \cite{PFGPlots}.}
+    		\label{fig:figure}
+    	\end{figure}
+
+    \subsection{Tables}
+	
+        \tabref{tab:table} shows an example table of some astronomical objects. 
+
+        \begin{table}[H]
+        	\caption{Astronomical Object Data}
+        	\label{tab:table}
+        	\begin{tabular}{lll}
+        	\toprule
+        	\textbf{Object} & \textbf{Type} & \textbf{Distance (Light Years)} \\
+        	\midrule
+        	Alpha Centauri & Star system & 4.37 \\
+        	Betelgeuse & Red supergiant star & 642.5 \\
+        	Andromeda & Spiral galaxy & 2.537 million \\
+        	Earth & Planet & 0 \\
+        	Sirius & Binary star system & 8.6 \\
+        	\bottomrule
+        	\end{tabular}
+        	\tabletext{Note: The table contains data of some famous celestial objects.}
+        \end{table}
+
+        The \inlinecode{\tabletext{}} command is used to add notes to tables easily. 
+
+\section{Document Data}
+
+    \subsection{Front-Matter Footer Block*}
+
+        The \inlinecode{\docinfo{}} command inserts a dedicated block at the bottom of the first column. Unlike floating elements, this block stays fixed in place - positioned visually like a footnote, although technically it is not one.
+    
+        The \inlinecode{\docinfo{}} block was created to give you greater control over supplementary document data, such as publication dates, licensing information, extended author details, and other front-matter notes. You can fully customize its content to suit your needs. If it’s not required, omit the command to remove this block entirely.
+    
+        \begin{note}
+            This feature has been adapted to work seamlessly alongside the standard \verb|\thanks{}| command, which is commonly used to indicate corresponding authors, equal contributions, or other acknowledgments.
+        \end{note}
+    
+        If \inlinecode{\thanks{}} is not used, \inlinecode{\docinfo{}} will automatically adjust its position. The implementation was designed to handle any combination of front-matter elements you might need when starting your document. In this example template, you’ll find a minimal demonstration that combines both to illustrate their interaction.
+
+    \subsection{Headers and Footers}
+
+        \subsubsection{Headers}
+
+            On all pages except the first, the document title appear in the header. Since twoside layout is enabled, its position alternates depending on whether the page is odd or even.
+
+        \subsubsection{Footers}
+
+            On odd-numbered pages, five elements display supplementary information for your document:
+    
+            \begin{itemize}
+                \item \inlinecode{\thepage} - Including the total number of pages (only for the first page).
+                \item \inlinecode{\footinfo{}} - For a short title or custom note.
+                \item \inlinecode{\theday{}} - Displays the current date.
+                \item \inlinecode{\organization{}} - For a university, institute, company, or any institutional affiliation.
+                \item \inlinecode{\leadauthor{}} - For the main author name et al.
+            \end{itemize}
+
+            On even-numbered pages, the page number appears alongside the content of \inlinecode{\footinfo{}} and, on the other side, the \inlinecode{\leadauthor{}}. 
+
+            In contrast to the header, the footer elements do not alternate their positions. The footer is explicitly configured for either odd or even pages, resulting in a fixed layout.
+            
+            In all cases, you can freely rearrange or customize the order of these elements by modifying the class file to suit your needs. If any of them are not required, simply omit the corresponding command - the remaining elements will automatically adjust their spacing to remain evenly distributed.
+
+\section{Tau Custom Packages}
+
+    \subsection{Taubabel.sty}
+		
+		This package have all the commands that automatically translate from English to Spanish when this custom package is defined. 
+		
+		By default, this document has its content in English. However, at the beginning of the document you will find a recommendation when writing in Spanish. 
+		
+		You may modify this package if you want to use other language than English or Spanish. This will make easier to translate your document without having to modify the class document.
+
+	\subsection{Tauenvs.sty}
+
+        This package provides custom environments designed to enhance the visual presentation and structure of your document. Key examples include tauenv, info, and note.
+        
+		Their style is defined by \inlinecode{tauenvstyle} - allowing you to customize their appearance according to your document’s requirements.
+
+		An example using the \inlinecode{tauenv} environment is shown below.
+		
+		\begin{tauenv}[frametitle=Custom Title]
+			This is an example of the custom title environment. To add a title type this command \verb|[frametitle=Custom Title]| next to the beginning of thie environment (as shown in this example).
+		\end{tauenv}
+
+        The \inlinecode{info} and \inlinecode{note} are environments which have a predefined title and translate their title to Spanish automatically when this language is defined.
+
+\section{Equations}
+
+	\equref{eq:equation} shows the Schrödinger equation as an example. 
+
+    \begin{equation}\label{eq:equation}
+        i\hbar \frac{\partial }{\partial t}\Psi(\mathbf{r},t) = \left[\frac{-\hbar^2}{2m}\nabla^2 + V(\mathbf{r},t) \right]\Psi(\mathbf{r},t)
+    \end{equation}
+	
+	The \inlinecode{amssymb} and \inlinecode{amsmath} packages were not required, as \href{https://ctan.org/pkg/stix2-otf/}{STIX2} font incorporates mathematical symbols for writing quality equations.
+	
+	\begin{note}
+		If you would like to change the values that adjust the spacing above and below the equations, change the \verb|\eqskip| value until the preferred spacing is set. The default value is set to 9pt.
+	\end{note}
+
+\section{Codes}
+
+	\subsection{Coding with Minted*}
+	
+		The \inlinecode{minted} package offers customized features for adding codes. In addition, the template is designed to work seamlessly with Fira Code, a monospaced font specially crafted for programming environments.
+
+        If your are using a desktop app as \href{https://www.texstudio.org/}{TeXstudio}, try these steps to make this package work on Windows:
+		
+		\begin{enumerate}
+			\item Install Python - A stable version (e.g., v.3.11)
+			\item Open the terminal and type \inlinecode{pip install Pygments}.
+			\item Update if a newer version is available.
+			\item Go to TeXStudio settings and change the default compiler to \inlinecode{pdflatex --shell-escape -interaction=nonstopmode \%.tex}.
+			\item Compile and wait for the result.
+		\end{enumerate}
+        
+		\vspace*{-9pt}
+        
+		\begin{tauenv}[frametitle=Caution]
+			Ensure that \textbf{pygments} is properly installed and added to your system’s PATH. Otherwise, you may encounter compilation errors. Additionally, enable shell escape when compiling, as it is required for minted to process and highlight code.
+		\end{tauenv}
+		
+		In Overleaf, this package is easier to use since it does not require any additional installations or modifications - just add the code as shown in the example. \coderef{lst:example} shows a Python example.
+		
+		\begin{code}
+			\lstinputlisting[language=python]{example.py}
+            \caption{Python code example with listings.}
+			\label{lst:example}
+		\end{code}
+		
+		You can customize its design changing \inlinecode{\usemintedstyle} command. The different styles offered by the \href{https://ctan.org/pkg/minted}{minted package} can be preview through this link - \url{https://pygments.org/styles/}.
+
+    \subsection{Coding with Listings}
+	
+		Since \inlinecode{minted} requires additional installations and can be complex in some desktop \TeX\ editors, you can use the \inlinecode{listings} package instead, which provides a simpler way to include code.
+		
+		\begin{code}
+			\lstinputlisting[language=python]{example.py}
+			\label{lst:example2}
+            \caption{Python code example with listings.}
+		\end{code}
+		
+		While \inlinecode{listings} is a simpler and widely supported package for code formatting, \inlinecode{minted} offers a more modern and powerful approach. It leverages the Pygments syntax highlighter to deliver superior coloring, language support, and styling options. One of its key advantages is the ability to easily switch between built-in color styles.
+		
+		In contrast, \inlinecode{listings} requires manual setup for colors, fonts, and formatting rules.
+		For users who prefer fine-tuned customization, the styling options for \inlinecode{listings} are organized in \inlinecode{tau.cls} file and can be modified at any time to suit individual preferences.
+
+	\subsection{Inline Code*}
+	
+		As shown in this template, inline code has a custom style for improved visual appeal. To use it, simply add \inlinecode{\inlinecode{}} command and place your code inside the braces.
+
+\section{Bibliography}
+		
+	Bibliography management is handled by \inlinecode{biblatex}, with the default citation and reference style set to IEEE. The \inlinecode{citestyle=numeric-comp} option is enabled, allowing multiple citations to be grouped within a single bracket (e.g., \cite{davis2023signalflow,bell2022codefont}). The citation format can be customized directly in \inlinecode{tau.cls} to suit any preferred style.
+
+\section{FAQ}
+
+    \subsection*{How do I manage my references?}
+        
+        To manage your references, I recommend using the tool \href{https://www.scribbr.es/citar/generador/folders/73QOXYsCwMRu4ifQaN65mx/lists/msTfx7GJjIAOUkufbISnA/}{scribbr}. You can simply enter the URL or create your own citation, and then export it to \LaTeX\ using the options in the three-dot menu.
+            
+        The generated citation can be copied and pasted into \inlinecode{tau.bib}, the file designated for bibliography management. You may rename this file, but if you do, remember to update the \inlinecode{\addbibresource} command in \inlinecode{tau.cls} under the biblatex section.
+    
+        \begin{note}
+            Some platforms, such as Google Scholar or scientific journals, provide citations directly in BibTeX format. Therefore, check if there is a ``how to cite this document'' section to streamline the citation process even further.
+        \end{note}
+
+        If you have any further questions, you can refer to the following page - \href{https://es.overleaf.com/learn/latex/Bibliography_management_with_biblatex}{Bibliography management with biblatex}.
+        
+    \subsection*{What should I do with the example files?}
+
+        The template includes sample content - such as an example figure, bibliography entries, and the \inlinecode{example.py} script - to demonstrate how the layout and features work. Once you start customizing the document for your own use, feel free to delete all example files and entries you don’t need.
+
+    \subsection*{How do I place equations easily?}
+
+        For equations, we have two options: inline or on its own line. For inline equations, simply place a dollar sign (\$) at the beginning and end of the equation. However, if you want the equation to be displayed on its own line, you need to use the equation environment.
+        
+        If you find it challenging to write formulas directly in \LaTeX, you can use text editors like Word. In the equations menu, you can select \LaTeX\ in the conversion section and copy and paste the equation you wrote into one of these two environments.
+
+    \subsection*{How do I change the paper size?}
+
+        By default, this class was adapted for a4paper and test it with letterpaper. The following paper sizes are available in \LaTeX:
+
+        \begin{itemize}
+            \item letterpaper (11 $\times$ 8.5 in)
+            \item legalpaper (14 $\times$ 8.5 in)
+            \item executivepaper (10.5 $\times$ 7.25 in)
+            \item a4paper (21 $\times$ 29.7 cm)
+            \item a5paper (21 $\times$ 14.8 cm)
+            \item b5paper (25 $\times$ 17.6 cm)
+       \end{itemize}
+
+\section*{Contact me}
+    
+    Have questions, suggestions, or an idea for a new feature? Found a bug or working on a project you'd like to invite me to?  
+    
+    Feel free to reach out - I'd be happy to help, collaborate, or fix the issue.
+
+    \AtBeginEnvironment{tabular}{\normalsize\sffamily\selectfont}
+    \begin{center}
+        \setlength{\tabcolsep}{3pt}
+        \begin{tabular}{cl}
+            \faEnvelope & \href{mailto:harith.yerragolam@research.iiit.ac.in}{harith.yerragolam@research.iiit.ac.in} \\
+            \faGlobe{} & \href{https://www.myportfolio-harith-yerragolam.xyz}{www.myportfolio-harith-yerragolam.xyz}
+        \end{tabular}
+    \end{center}
+
+\section*{Github Repository}
+
+    Visit the repository to access the source code, track ongoing development, report issues, and stay up to date with the latest changes.
+
+    \begin{center}
+        \setlength{\tabcolsep}{3pt}
+        \begin{tabular}{cl}
+             \faGithub &  \url{https://github.com/Harith-Y/PreCog-CV-Task}\\
+        \end{tabular}
+    \end{center}
+
+%----------------------------------------------------------
+
+\printbibliography
+
+%----------------------------------------------------------
+
+\end{document}
